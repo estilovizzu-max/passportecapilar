@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BookOpen, Calendar, Camera, FileText, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { Ornament, Screen, SectionTitle, WineButton } from "@/components/passport/ui";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/registrar")({
   head: () => ({

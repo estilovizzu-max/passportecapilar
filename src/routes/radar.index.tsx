@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Calendar, Sparkles, Waves, Share2 } from "lucide-react";
 import { Ornament, Screen, Stamp } from "@/components/passport/ui";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { clientes } from "@/lib/passport-data";
 import { Radar } from "./inicio";
 

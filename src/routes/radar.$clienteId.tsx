@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Bell, Check, ChevronRight, Compass, Plane } from "lucide-react";
 import { Ornament, OutlineButton, Screen, WineButton } from "@/components/passport/ui";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { getCliente } from "@/lib/passport-data";
 import retrato from "@/assets/cliente-marina.jpg";
 import { toast } from "sonner";
