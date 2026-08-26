@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
+import { Apple, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -52,6 +52,16 @@ function Login() {
       toast.error(result.error.message);
     }
   }
+
+  async function signInWithApple() {
+    const result = await lovable.auth.signInWithOAuth("apple", {
+      redirect_uri: window.location.origin + "/auth/callback",
+    });
+    if (result.error) {
+      toast.error(result.error.message);
+    }
+  }
+
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-10">
@@ -114,6 +124,14 @@ function Login() {
               Entrar com Google
             </OutlineButton>
           </div>
+
+          <div className="mt-3">
+            <OutlineButton onClick={signInWithApple}>
+              <Apple className="h-5 w-5 text-primary" />
+              Entrar com Apple
+            </OutlineButton>
+          </div>
+
 
           <div className="mt-3">
             <OutlineButton to="/acesso-cliente">
