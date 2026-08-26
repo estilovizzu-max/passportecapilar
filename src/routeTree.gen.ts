@@ -15,6 +15,7 @@ import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
 import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
 import { Route as RegistrarRouteImport } from './routes/registrar'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as RadarIndexRouteImport } from './routes/radar.index'
 import { Route as RadarClienteIdRouteImport } from './routes/radar.$clienteId'
 
@@ -48,6 +49,11 @@ const RegistrarRoute = RegistrarRouteImport.update({
   path: '/registrar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RadarIndexRoute = RadarIndexRouteImport.update({
   id: '/radar/',
   path: '/radar/',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/passaporte': typeof PassaporteRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar/': typeof RadarIndexRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/passaporte': typeof PassaporteRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar': typeof RadarIndexRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/passaporte': typeof PassaporteRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar/': typeof RadarIndexRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/passaporte'
     | '/proximo-capitulo'
     | '/registrar'
+    | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar/'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/passaporte'
     | '/proximo-capitulo'
     | '/registrar'
+    | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/passaporte'
     | '/proximo-capitulo'
     | '/registrar'
+    | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar/'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   PassaporteRoute: typeof PassaporteRoute
   ProximoCapituloRoute: typeof ProximoCapituloRoute
   RegistrarRoute: typeof RegistrarRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   RadarClienteIdRoute: typeof RadarClienteIdRoute
   RadarIndexRoute: typeof RadarIndexRoute
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegistrarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/radar/': {
       id: '/radar/'
       path: '/radar'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   PassaporteRoute: PassaporteRoute,
   ProximoCapituloRoute: ProximoCapituloRoute,
   RegistrarRoute: RegistrarRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   RadarClienteIdRoute: RadarClienteIdRoute,
   RadarIndexRoute: RadarIndexRoute,
 }
