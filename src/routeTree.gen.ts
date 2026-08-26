@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcessoClienteRouteImport } from './routes/acesso-cliente'
+import { Route as InicioRouteImport } from './routes/inicio'
+import { Route as PassaporteRouteImport } from './routes/passaporte'
+import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
+import { Route as RegistrarRouteImport } from './routes/registrar'
+import { Route as RadarIndexRouteImport } from './routes/radar.index'
+import { Route as RadarClienteIdRouteImport } from './routes/radar.$clienteId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AcessoClienteRoute = AcessoClienteRouteImport.update({
+  id: '/acesso-cliente',
+  path: '/acesso-cliente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InicioRoute = InicioRouteImport.update({
+  id: '/inicio',
+  path: '/inicio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PassaporteRoute = PassaporteRouteImport.update({
+  id: '/passaporte',
+  path: '/passaporte',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProximoCapituloRoute = ProximoCapituloRouteImport.update({
+  id: '/proximo-capitulo',
+  path: '/proximo-capitulo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegistrarRoute = RegistrarRouteImport.update({
+  id: '/registrar',
+  path: '/registrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadarIndexRoute = RadarIndexRouteImport.update({
+  id: '/radar/',
+  path: '/radar/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadarClienteIdRoute = RadarClienteIdRouteImport.update({
+  id: '/radar/$clienteId',
+  path: '/radar/$clienteId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acesso-cliente': typeof AcessoClienteRoute
+  '/inicio': typeof InicioRoute
+  '/passaporte': typeof PassaporteRoute
+  '/proximo-capitulo': typeof ProximoCapituloRoute
+  '/registrar': typeof RegistrarRoute
+  '/radar/$clienteId': typeof RadarClienteIdRoute
+  '/radar/': typeof RadarIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acesso-cliente': typeof AcessoClienteRoute
+  '/inicio': typeof InicioRoute
+  '/passaporte': typeof PassaporteRoute
+  '/proximo-capitulo': typeof ProximoCapituloRoute
+  '/registrar': typeof RegistrarRoute
+  '/radar/$clienteId': typeof RadarClienteIdRoute
+  '/radar': typeof RadarIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/acesso-cliente': typeof AcessoClienteRoute
+  '/inicio': typeof InicioRoute
+  '/passaporte': typeof PassaporteRoute
+  '/proximo-capitulo': typeof ProximoCapituloRoute
+  '/registrar': typeof RegistrarRoute
+  '/radar/$clienteId': typeof RadarClienteIdRoute
+  '/radar/': typeof RadarIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/acesso-cliente'
+    | '/inicio'
+    | '/passaporte'
+    | '/proximo-capitulo'
+    | '/registrar'
+    | '/radar/$clienteId'
+    | '/radar/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/acesso-cliente'
+    | '/inicio'
+    | '/passaporte'
+    | '/proximo-capitulo'
+    | '/registrar'
+    | '/radar/$clienteId'
+    | '/radar'
+  id:
+    | '__root__'
+    | '/'
+    | '/acesso-cliente'
+    | '/inicio'
+    | '/passaporte'
+    | '/proximo-capitulo'
+    | '/registrar'
+    | '/radar/$clienteId'
+    | '/radar/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcessoClienteRoute: typeof AcessoClienteRoute
+  InicioRoute: typeof InicioRoute
+  PassaporteRoute: typeof PassaporteRoute
+  ProximoCapituloRoute: typeof ProximoCapituloRoute
+  RegistrarRoute: typeof RegistrarRoute
+  RadarClienteIdRoute: typeof RadarClienteIdRoute
+  RadarIndexRoute: typeof RadarIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/acesso-cliente': {
+      id: '/acesso-cliente'
+      path: '/acesso-cliente'
+      fullPath: '/acesso-cliente'
+      preLoaderRoute: typeof AcessoClienteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inicio': {
+      id: '/inicio'
+      path: '/inicio'
+      fullPath: '/inicio'
+      preLoaderRoute: typeof InicioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/passaporte': {
+      id: '/passaporte'
+      path: '/passaporte'
+      fullPath: '/passaporte'
+      preLoaderRoute: typeof PassaporteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/proximo-capitulo': {
+      id: '/proximo-capitulo'
+      path: '/proximo-capitulo'
+      fullPath: '/proximo-capitulo'
+      preLoaderRoute: typeof ProximoCapituloRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/registrar': {
+      id: '/registrar'
+      path: '/registrar'
+      fullPath: '/registrar'
+      preLoaderRoute: typeof RegistrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radar/': {
+      id: '/radar/'
+      path: '/radar'
+      fullPath: '/radar/'
+      preLoaderRoute: typeof RadarIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radar/$clienteId': {
+      id: '/radar/$clienteId'
+      path: '/radar/$clienteId'
+      fullPath: '/radar/$clienteId'
+      preLoaderRoute: typeof RadarClienteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcessoClienteRoute: AcessoClienteRoute,
+  InicioRoute: InicioRoute,
+  PassaporteRoute: PassaporteRoute,
+  ProximoCapituloRoute: ProximoCapituloRoute,
+  RegistrarRoute: RegistrarRoute,
+  RadarClienteIdRoute: RadarClienteIdRoute,
+  RadarIndexRoute: RadarIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
