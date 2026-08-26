@@ -126,6 +126,14 @@ function Login() {
           </div>
 
           <div className="mt-3">
+            <OutlineButton onClick={signInWithApple}>
+              <Apple className="h-5 w-5 text-primary" />
+              Entrar com Apple
+            </OutlineButton>
+          </div>
+
+
+          <div className="mt-3">
             <OutlineButton to="/acesso-cliente">
               <UserRound className="h-5 w-5 text-primary" />
               Acessar como cliente
