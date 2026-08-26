@@ -61,7 +61,13 @@ export function RoundIconButton({
   );
 }
 
-export function AppHeader({ back, backTo = "/inicio" }: { back?: boolean; backTo?: string }) {
+export function AppHeader({
+  back,
+  backTo = "/inicio",
+}: {
+  back?: boolean | undefined;
+  backTo?: string | undefined;
+}) {
   return (
     <header className="px-5 pt-5">
       <div className="flex items-start justify-between">
@@ -194,8 +200,8 @@ export function Screen({
 }: {
   children: ReactNode;
   nav?: boolean;
-  back?: boolean;
-  backTo?: string;
+  back?: boolean | undefined;
+  backTo?: string | undefined;
   header?: boolean;
 }) {
   return (
