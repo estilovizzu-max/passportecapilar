@@ -11,8 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AcessoClienteRouteImport } from './routes/acesso-cliente'
+import { Route as BrandStudioRouteImport } from './routes/brand-studio'
+import { Route as ClientesRouteImport } from './routes/clientes'
+import { Route as ComunicacaoRouteImport } from './routes/comunicacao'
 import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
 import { Route as RegistrarRouteImport } from './routes/registrar'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -29,6 +33,21 @@ const AcessoClienteRoute = AcessoClienteRouteImport.update({
   path: '/acesso-cliente',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandStudioRoute = BrandStudioRouteImport.update({
+  id: '/brand-studio',
+  path: '/brand-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunicacaoRoute = ComunicacaoRouteImport.update({
+  id: '/comunicacao',
+  path: '/comunicacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InicioRoute = InicioRouteImport.update({
   id: '/inicio',
   path: '/inicio',
@@ -37,6 +56,11 @@ const InicioRoute = InicioRouteImport.update({
 const PassaporteRoute = PassaporteRouteImport.update({
   id: '/passaporte',
   path: '/passaporte',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProximoCapituloRoute = ProximoCapituloRouteImport.update({
@@ -68,8 +92,12 @@ const RadarClienteIdRoute = RadarClienteIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/brand-studio': typeof BrandStudioRoute
+  '/clientes': typeof ClientesRoute
+  '/comunicacao': typeof ComunicacaoRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
+  '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -79,8 +107,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/brand-studio': typeof BrandStudioRoute
+  '/clientes': typeof ClientesRoute
+  '/comunicacao': typeof ComunicacaoRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
+  '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -91,8 +123,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/brand-studio': typeof BrandStudioRoute
+  '/clientes': typeof ClientesRoute
+  '/comunicacao': typeof ComunicacaoRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
+  '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -104,8 +140,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/acesso-cliente'
+    | '/brand-studio'
+    | '/clientes'
+    | '/comunicacao'
     | '/inicio'
     | '/passaporte'
+    | '/perfil'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -115,8 +155,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/acesso-cliente'
+    | '/brand-studio'
+    | '/clientes'
+    | '/comunicacao'
     | '/inicio'
     | '/passaporte'
+    | '/perfil'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -126,8 +170,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/acesso-cliente'
+    | '/brand-studio'
+    | '/clientes'
+    | '/comunicacao'
     | '/inicio'
     | '/passaporte'
+    | '/perfil'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -138,8 +186,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AcessoClienteRoute: typeof AcessoClienteRoute
+  BrandStudioRoute: typeof BrandStudioRoute
+  ClientesRoute: typeof ClientesRoute
+  ComunicacaoRoute: typeof ComunicacaoRoute
   InicioRoute: typeof InicioRoute
   PassaporteRoute: typeof PassaporteRoute
+  PerfilRoute: typeof PerfilRoute
   ProximoCapituloRoute: typeof ProximoCapituloRoute
   RegistrarRoute: typeof RegistrarRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -163,6 +215,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcessoClienteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brand-studio': {
+      id: '/brand-studio'
+      path: '/brand-studio'
+      fullPath: '/brand-studio'
+      preLoaderRoute: typeof BrandStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunicacao': {
+      id: '/comunicacao'
+      path: '/comunicacao'
+      fullPath: '/comunicacao'
+      preLoaderRoute: typeof ComunicacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inicio': {
       id: '/inicio'
       path: '/inicio'
@@ -175,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/passaporte'
       fullPath: '/passaporte'
       preLoaderRoute: typeof PassaporteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/proximo-capitulo': {
@@ -218,8 +298,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AcessoClienteRoute: AcessoClienteRoute,
+  BrandStudioRoute: BrandStudioRoute,
+  ClientesRoute: ClientesRoute,
+  ComunicacaoRoute: ComunicacaoRoute,
   InicioRoute: InicioRoute,
   PassaporteRoute: PassaporteRoute,
+  PerfilRoute: PerfilRoute,
   ProximoCapituloRoute: ProximoCapituloRoute,
   RegistrarRoute: RegistrarRoute,
   AuthCallbackRoute: AuthCallbackRoute,
