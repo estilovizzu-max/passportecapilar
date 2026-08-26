@@ -41,26 +41,28 @@ function Login() {
       toast.error(error.message);
       return;
     }
+    void trackEvent("login", { provider: "email" });
     navigate({ to: "/inicio" });
   }
 
-  async function signInWithGoogle() {
-    const result = await lovable.auth.signInWithOAuth("google", {
+  async function signInWith(provider: "google" | "apple") {
+    const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: window.location.origin + "/auth/callback",
     });
     if (result.error) {
       toast.error(result.error.message);
+      return;
+    }
+    // Fluxo em iframe/preview: a sessão já foi definida, seguimos direto.
+    const { data } = await supabase.auth.getSession();
+    if (data.session) {
+      void trackEvent("login", { provider });
+      navigate({ to: "/inicio" });
     }
   }
 
-  async function signInWithApple() {
-    const result = await lovable.auth.signInWithOAuth("apple", {
-      redirect_uri: window.location.origin + "/auth/callback",
-    });
-    if (result.error) {
-      toast.error(result.error.message);
-    }
-  }
+  const signInWithGoogle = () => signInWith("google");
+  const signInWithApple = () => signInWith("apple");
 
 
   return (
