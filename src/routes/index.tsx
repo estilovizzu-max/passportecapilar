@@ -4,6 +4,7 @@ import { Apple, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { trackEvent } from "@/lib/analytics";
 import { Emblema, Ornament, OutlineButton, WineButton } from "@/components/passport/ui";
 
 export const Route = createFileRoute("/")({
