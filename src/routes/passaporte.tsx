@@ -27,6 +27,7 @@ export const Route = createFileRoute("/passaporte")({
 const etapaIcons = [Search, Droplet, Waves, Sparkles];
 
 function Passaporte() {
+  useRequireAuth();
   const atual = 2;
   return (
     <Screen>

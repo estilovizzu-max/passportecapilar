@@ -30,6 +30,7 @@ const beneficios = [
 ];
 
 function ProximoCapitulo() {
+  useRequireAuth();
   return (
     <Screen back backTo="/passaporte">
       <div className="flex items-center justify-center gap-3">

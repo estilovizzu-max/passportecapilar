@@ -25,6 +25,7 @@ export const Route = createFileRoute("/registrar")({
 });
 
 function Registrar() {
+  useRequireAuth();
   const [obs, setObs] = useState("");
 
   return (

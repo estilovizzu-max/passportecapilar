@@ -29,6 +29,7 @@ const filtros = ["TODOS", "ESTA SEMANA", "PRÓXIMO MÊS"] as const;
 const icones = [Share2, Sparkles, Waves];
 
 function RadarPage() {
+  useRequireAuth();
   const [filtro, setFiltro] = useState<string>("TODOS");
   const lista =
     filtro === "ESTA SEMANA"

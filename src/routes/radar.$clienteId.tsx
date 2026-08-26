@@ -31,6 +31,7 @@ export const Route = createFileRoute("/radar/$clienteId")({
 });
 
 function DetalheRadar() {
+  useRequireAuth();
   const c = Route.useLoaderData();
 
   return (
