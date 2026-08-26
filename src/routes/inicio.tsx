@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, ChevronRight, UserRound } from "lucide-react";
 import { Ornament, Screen, SectionTitle } from "@/components/passport/ui";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { clientes } from "@/lib/passport-data";
 import retrato from "@/assets/cliente-marina.jpg";
 
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/inicio")({
 });
 
 function Inicio() {
+  useRequireAuth();
   return (
     <Screen>
       <div className="flex items-center gap-4">
