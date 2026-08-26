@@ -1,24 +1,98 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
+import { Emblema, Ornament, OutlineButton, WineButton } from "@/components/passport/ui";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Passaporte Capilar — Acesso do profissional" },
+      {
+        name: "description",
+        content:
+          "Entre no Passaporte Capilar e acompanhe protocolos, capítulos e retornos de cada cliente.",
+      },
+      { property: "og:title", content: "Passaporte Capilar — Acesso" },
+      {
+        property: "og:description",
+        content: "Seu protocolo começa aqui. Gerencie a jornada capilar das suas clientes.",
+      },
+    ],
+  }),
+  component: Login,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Login() {
+  const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-10">
+      <div className="rounded-2xl border border-gold/50 p-4">
+        <div className="rounded-xl border border-gold/30 px-4 py-8">
+          <div className="flex flex-col items-center">
+            <Emblema className="h-16" />
+            <h1 className="mt-4 text-center font-display text-3xl tracking-[0.05em] gold-text">
+              PASSAPORTE CAPILAR<sup className="text-[0.45em]">TM</sup>
+            </h1>
+            <Ornament className="mt-3 w-full" />
+            <p className="mt-4 font-display text-base text-ink">Seu protocolo começa aqui</p>
+          </div>
+
+          <form
+            className="mt-8 space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate({ to: "/inicio" });
+            }}
+          >
+            <label className="flex items-center gap-3 rounded-xl border border-gold/60 bg-card px-4 py-3.5">
+              <Mail className="h-5 w-5 text-gold" />
+              <input
+                type="email"
+                required
+                placeholder="E-mail"
+                className="w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              />
+            </label>
+
+            <label className="flex items-center gap-3 rounded-xl border border-gold/60 bg-card px-4 py-3.5">
+              <Lock className="h-5 w-5 text-gold" />
+              <input
+                type={show ? "text" : "password"}
+                required
+                placeholder="Senha"
+                className="w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              />
+              <button
+                type="button"
+                aria-label="Mostrar senha"
+                onClick={() => setShow((v) => !v)}
+                className="text-gold"
+              >
+                {show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </label>
+
+            <div className="pt-2">
+              <WineButton type="submit">ENTRAR</WineButton>
+            </div>
+          </form>
+
+          <p className="mt-5 text-center font-display text-sm text-primary underline underline-offset-8">
+            Esqueci minha senha
+          </p>
+
+          <div className="mt-8">
+            <OutlineButton to="/acesso-cliente">
+              <UserRound className="h-5 w-5 text-primary" />
+              Acessar como cliente
+            </OutlineButton>
+          </div>
+
+          <Ornament className="mt-8" />
+        </div>
+      </div>
     </div>
   );
 }
