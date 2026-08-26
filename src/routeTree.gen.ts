@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AcessoClienteRouteImport } from './routes/acesso-cliente'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BrandStudioRouteImport } from './routes/brand-studio'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ComunicacaoRouteImport } from './routes/comunicacao'
+import { Route as EditarPerfilRouteImport } from './routes/editar-perfil'
 import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
 import { Route as PerfilRouteImport } from './routes/perfil'
@@ -33,6 +35,11 @@ const AcessoClienteRoute = AcessoClienteRouteImport.update({
   path: '/acesso-cliente',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandStudioRoute = BrandStudioRouteImport.update({
   id: '/brand-studio',
   path: '/brand-studio',
@@ -46,6 +53,11 @@ const ClientesRoute = ClientesRouteImport.update({
 const ComunicacaoRoute = ComunicacaoRouteImport.update({
   id: '/comunicacao',
   path: '/comunicacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditarPerfilRoute = EditarPerfilRouteImport.update({
+  id: '/editar-perfil',
+  path: '/editar-perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InicioRoute = InicioRouteImport.update({
@@ -92,9 +104,11 @@ const RadarClienteIdRoute = RadarClienteIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/admin': typeof AdminRoute
   '/brand-studio': typeof BrandStudioRoute
   '/clientes': typeof ClientesRoute
   '/comunicacao': typeof ComunicacaoRoute
+  '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
@@ -107,9 +121,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/admin': typeof AdminRoute
   '/brand-studio': typeof BrandStudioRoute
   '/clientes': typeof ClientesRoute
   '/comunicacao': typeof ComunicacaoRoute
+  '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
@@ -123,9 +139,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/admin': typeof AdminRoute
   '/brand-studio': typeof BrandStudioRoute
   '/clientes': typeof ClientesRoute
   '/comunicacao': typeof ComunicacaoRoute
+  '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
@@ -140,9 +158,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/acesso-cliente'
+    | '/admin'
     | '/brand-studio'
     | '/clientes'
     | '/comunicacao'
+    | '/editar-perfil'
     | '/inicio'
     | '/passaporte'
     | '/perfil'
@@ -155,9 +175,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/acesso-cliente'
+    | '/admin'
     | '/brand-studio'
     | '/clientes'
     | '/comunicacao'
+    | '/editar-perfil'
     | '/inicio'
     | '/passaporte'
     | '/perfil'
@@ -170,9 +192,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/acesso-cliente'
+    | '/admin'
     | '/brand-studio'
     | '/clientes'
     | '/comunicacao'
+    | '/editar-perfil'
     | '/inicio'
     | '/passaporte'
     | '/perfil'
@@ -186,9 +210,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AcessoClienteRoute: typeof AcessoClienteRoute
+  AdminRoute: typeof AdminRoute
   BrandStudioRoute: typeof BrandStudioRoute
   ClientesRoute: typeof ClientesRoute
   ComunicacaoRoute: typeof ComunicacaoRoute
+  EditarPerfilRoute: typeof EditarPerfilRoute
   InicioRoute: typeof InicioRoute
   PassaporteRoute: typeof PassaporteRoute
   PerfilRoute: typeof PerfilRoute
@@ -215,6 +241,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcessoClienteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brand-studio': {
       id: '/brand-studio'
       path: '/brand-studio'
@@ -234,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/comunicacao'
       fullPath: '/comunicacao'
       preLoaderRoute: typeof ComunicacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editar-perfil': {
+      id: '/editar-perfil'
+      path: '/editar-perfil'
+      fullPath: '/editar-perfil'
+      preLoaderRoute: typeof EditarPerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inicio': {
@@ -298,9 +338,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AcessoClienteRoute: AcessoClienteRoute,
+  AdminRoute: AdminRoute,
   BrandStudioRoute: BrandStudioRoute,
   ClientesRoute: ClientesRoute,
   ComunicacaoRoute: ComunicacaoRoute,
+  EditarPerfilRoute: EditarPerfilRoute,
   InicioRoute: InicioRoute,
   PassaporteRoute: PassaporteRoute,
   PerfilRoute: PerfilRoute,
