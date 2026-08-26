@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BarChart3, ChevronRight, Droplet, Plane, Search, Shield, Sparkles, Target, Waves } from "lucide-react";
 import { Ornament, OutlineButton, Screen, SectionTitle, WineButton } from "@/components/passport/ui";
+import { useRequireAuth } from "@/hooks/useAuth";
 import { etapas } from "@/lib/passport-data";
 import retrato from "@/assets/cliente-marina.jpg";
 
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/passaporte")({
 const etapaIcons = [Search, Droplet, Waves, Sparkles];
 
 function Passaporte() {
+  useRequireAuth();
   const atual = 2;
   return (
     <Screen>

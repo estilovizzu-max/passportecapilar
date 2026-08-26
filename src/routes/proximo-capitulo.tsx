@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, Droplet, Feather, Flame, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Ornament, Screen, Stamp, WineButton } from "@/components/passport/ui";
+import { useRequireAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/proximo-capitulo")({
   head: () => ({
@@ -29,6 +30,7 @@ const beneficios = [
 ];
 
 function ProximoCapitulo() {
+  useRequireAuth();
   return (
     <Screen back backTo="/passaporte">
       <div className="flex items-center justify-center gap-3">

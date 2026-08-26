@@ -1,6 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { Emblema, Ornament, OutlineButton, WineButton } from "@/components/passport/ui";
 
 export const Route = createFileRoute("/")({
@@ -24,7 +27,31 @@ export const Route = createFileRoute("/")({
 
 function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    navigate({ to: "/inicio" });
+  }
+
+  async function signInWithGoogle() {
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin + "/auth/callback",
+    });
+    if (result.error) {
+      toast.error(result.error.message);
+    }
+  }
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-10">
@@ -39,18 +66,14 @@ function Login() {
             <p className="mt-4 font-display text-base text-ink">Seu protocolo começa aqui</p>
           </div>
 
-          <form
-            className="mt-8 space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ to: "/inicio" });
-            }}
-          >
+          <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
             <label className="flex items-center gap-3 rounded-xl border border-gold/60 bg-card px-4 py-3.5">
               <Mail className="h-5 w-5 text-gold" />
               <input
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="E-mail"
                 className="w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
               />
@@ -61,6 +84,8 @@ function Login() {
               <input
                 type={show ? "text" : "password"}
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Senha"
                 className="w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
               />
@@ -75,7 +100,7 @@ function Login() {
             </label>
 
             <div className="pt-2">
-              <WineButton type="submit">ENTRAR</WineButton>
+              <WineButton type="submit">{loading ? "ENTRANDO..." : "ENTRAR"}</WineButton>
             </div>
           </form>
 
@@ -84,6 +109,13 @@ function Login() {
           </p>
 
           <div className="mt-8">
+            <OutlineButton onClick={signInWithGoogle}>
+              <UserRound className="h-5 w-5 text-primary" />
+              Entrar com Google
+            </OutlineButton>
+          </div>
+
+          <div className="mt-3">
             <OutlineButton to="/acesso-cliente">
               <UserRound className="h-5 w-5 text-primary" />
               Acessar como cliente

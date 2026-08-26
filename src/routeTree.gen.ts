@@ -11,10 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AcessoClienteRouteImport } from './routes/acesso-cliente'
+import { Route as BrandStudioRouteImport } from './routes/brand-studio'
+import { Route as ClientesRouteImport } from './routes/clientes'
+import { Route as ComunicacaoRouteImport } from './routes/comunicacao'
 import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
 import { Route as RegistrarRouteImport } from './routes/registrar'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as RadarIndexRouteImport } from './routes/radar.index'
 import { Route as RadarClienteIdRouteImport } from './routes/radar.$clienteId'
 
@@ -28,6 +33,21 @@ const AcessoClienteRoute = AcessoClienteRouteImport.update({
   path: '/acesso-cliente',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandStudioRoute = BrandStudioRouteImport.update({
+  id: '/brand-studio',
+  path: '/brand-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunicacaoRoute = ComunicacaoRouteImport.update({
+  id: '/comunicacao',
+  path: '/comunicacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InicioRoute = InicioRouteImport.update({
   id: '/inicio',
   path: '/inicio',
@@ -38,6 +58,11 @@ const PassaporteRoute = PassaporteRouteImport.update({
   path: '/passaporte',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProximoCapituloRoute = ProximoCapituloRouteImport.update({
   id: '/proximo-capitulo',
   path: '/proximo-capitulo',
@@ -46,6 +71,11 @@ const ProximoCapituloRoute = ProximoCapituloRouteImport.update({
 const RegistrarRoute = RegistrarRouteImport.update({
   id: '/registrar',
   path: '/registrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RadarIndexRoute = RadarIndexRouteImport.update({
@@ -62,20 +92,30 @@ const RadarClienteIdRoute = RadarClienteIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/brand-studio': typeof BrandStudioRoute
+  '/clientes': typeof ClientesRoute
+  '/comunicacao': typeof ComunicacaoRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
+  '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar/': typeof RadarIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/brand-studio': typeof BrandStudioRoute
+  '/clientes': typeof ClientesRoute
+  '/comunicacao': typeof ComunicacaoRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
+  '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar': typeof RadarIndexRoute
 }
@@ -83,10 +123,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/brand-studio': typeof BrandStudioRoute
+  '/clientes': typeof ClientesRoute
+  '/comunicacao': typeof ComunicacaoRoute
   '/inicio': typeof InicioRoute
   '/passaporte': typeof PassaporteRoute
+  '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar/': typeof RadarIndexRoute
 }
@@ -95,30 +140,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/acesso-cliente'
+    | '/brand-studio'
+    | '/clientes'
+    | '/comunicacao'
     | '/inicio'
     | '/passaporte'
+    | '/perfil'
     | '/proximo-capitulo'
     | '/registrar'
+    | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/acesso-cliente'
+    | '/brand-studio'
+    | '/clientes'
+    | '/comunicacao'
     | '/inicio'
     | '/passaporte'
+    | '/perfil'
     | '/proximo-capitulo'
     | '/registrar'
+    | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar'
   id:
     | '__root__'
     | '/'
     | '/acesso-cliente'
+    | '/brand-studio'
+    | '/clientes'
+    | '/comunicacao'
     | '/inicio'
     | '/passaporte'
+    | '/perfil'
     | '/proximo-capitulo'
     | '/registrar'
+    | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar/'
   fileRoutesById: FileRoutesById
@@ -126,10 +186,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AcessoClienteRoute: typeof AcessoClienteRoute
+  BrandStudioRoute: typeof BrandStudioRoute
+  ClientesRoute: typeof ClientesRoute
+  ComunicacaoRoute: typeof ComunicacaoRoute
   InicioRoute: typeof InicioRoute
   PassaporteRoute: typeof PassaporteRoute
+  PerfilRoute: typeof PerfilRoute
   ProximoCapituloRoute: typeof ProximoCapituloRoute
   RegistrarRoute: typeof RegistrarRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   RadarClienteIdRoute: typeof RadarClienteIdRoute
   RadarIndexRoute: typeof RadarIndexRoute
 }
@@ -150,6 +215,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcessoClienteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brand-studio': {
+      id: '/brand-studio'
+      path: '/brand-studio'
+      fullPath: '/brand-studio'
+      preLoaderRoute: typeof BrandStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunicacao': {
+      id: '/comunicacao'
+      path: '/comunicacao'
+      fullPath: '/comunicacao'
+      preLoaderRoute: typeof ComunicacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inicio': {
       id: '/inicio'
       path: '/inicio'
@@ -164,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PassaporteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/proximo-capitulo': {
       id: '/proximo-capitulo'
       path: '/proximo-capitulo'
@@ -176,6 +269,13 @@ declare module '@tanstack/react-router' {
       path: '/registrar'
       fullPath: '/registrar'
       preLoaderRoute: typeof RegistrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/radar/': {
@@ -198,10 +298,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AcessoClienteRoute: AcessoClienteRoute,
+  BrandStudioRoute: BrandStudioRoute,
+  ClientesRoute: ClientesRoute,
+  ComunicacaoRoute: ComunicacaoRoute,
   InicioRoute: InicioRoute,
   PassaporteRoute: PassaporteRoute,
+  PerfilRoute: PerfilRoute,
   ProximoCapituloRoute: ProximoCapituloRoute,
   RegistrarRoute: RegistrarRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   RadarClienteIdRoute: RadarClienteIdRoute,
   RadarIndexRoute: RadarIndexRoute,
 }
