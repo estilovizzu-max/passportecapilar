@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { Session, User } from "@supabase/supabase-js";
 import {
   createContext,
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -29,17 +31,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, s) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s);
       setUser(s?.user ?? null);
       setIsLoading(false);
+      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        queryClient.invalidateQueries();
+      }
     });
 
     return () => listener.subscription.unsubscribe();
-  }, []);
+  }, [queryClient]);
 
+  // Encerra a sessão de qualquer provedor (Apple, Google, e-mail/senha)
+  // e limpa todo o estado do cliente.
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut({ scope: "global" }).catch(async () => {
+      await supabase.auth.signOut();
+    });
+    setSession(null);
+    setUser(null);
+    if (typeof window !== "undefined") {
+      try {
+        Object.keys(window.localStorage)
+          .filter((k) => k.startsWith("sb-") || k.startsWith("passaporte:"))
+          .forEach((k) => window.localStorage.removeItem(k));
+      } catch {
+        /* storage indisponível */
+      }
+    }
   };
 
   return (
