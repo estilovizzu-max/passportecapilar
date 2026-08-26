@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AcessoClienteRouteImport } from './routes/acesso-cliente'
+import { Route as InicioRouteImport } from './routes/inicio'
+import { Route as RadarIndexRouteImport } from './routes/radar.index'
+import { Route as RadarClienteIdRouteImport } from './routes/radar.$clienteId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +25,65 @@ const AcessoClienteRoute = AcessoClienteRouteImport.update({
   path: '/acesso-cliente',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InicioRoute = InicioRouteImport.update({
+  id: '/inicio',
+  path: '/inicio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadarIndexRoute = RadarIndexRouteImport.update({
+  id: '/radar/',
+  path: '/radar/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadarClienteIdRoute = RadarClienteIdRouteImport.update({
+  id: '/radar/$clienteId',
+  path: '/radar/$clienteId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/inicio': typeof InicioRoute
+  '/radar/$clienteId': typeof RadarClienteIdRoute
+  '/radar/': typeof RadarIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/inicio': typeof InicioRoute
+  '/radar/$clienteId': typeof RadarClienteIdRoute
+  '/radar': typeof RadarIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
+  '/inicio': typeof InicioRoute
+  '/radar/$clienteId': typeof RadarClienteIdRoute
+  '/radar/': typeof RadarIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/acesso-cliente'
+  fullPaths:
+    '/' | '/acesso-cliente' | '/inicio' | '/radar/$clienteId' | '/radar/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/acesso-cliente'
-  id: '__root__' | '/' | '/acesso-cliente'
+  to: '/' | '/acesso-cliente' | '/inicio' | '/radar/$clienteId' | '/radar'
+  id:
+    | '__root__'
+    | '/'
+    | '/acesso-cliente'
+    | '/inicio'
+    | '/radar/$clienteId'
+    | '/radar/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AcessoClienteRoute: typeof AcessoClienteRoute
+  InicioRoute: typeof InicioRoute
+  RadarClienteIdRoute: typeof RadarClienteIdRoute
+  RadarIndexRoute: typeof RadarIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +102,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcessoClienteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inicio': {
+      id: '/inicio'
+      path: '/inicio'
+      fullPath: '/inicio'
+      preLoaderRoute: typeof InicioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radar/': {
+      id: '/radar/'
+      path: '/radar'
+      fullPath: '/radar/'
+      preLoaderRoute: typeof RadarIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radar/$clienteId': {
+      id: '/radar/$clienteId'
+      path: '/radar/$clienteId'
+      fullPath: '/radar/$clienteId'
+      preLoaderRoute: typeof RadarClienteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AcessoClienteRoute: AcessoClienteRoute,
+  InicioRoute: InicioRoute,
+  RadarClienteIdRoute: RadarClienteIdRoute,
+  RadarIndexRoute: RadarIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
