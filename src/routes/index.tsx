@@ -53,6 +53,16 @@ function Login() {
     }
   }
 
+  async function signInWithApple() {
+    const result = await lovable.auth.signInWithOAuth("apple", {
+      redirect_uri: window.location.origin + "/auth/callback",
+    });
+    if (result.error) {
+      toast.error(result.error.message);
+    }
+  }
+
+
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-10">
       <div className="rounded-2xl border border-gold/50 p-4">
