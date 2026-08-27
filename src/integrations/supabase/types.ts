@@ -40,31 +40,55 @@ export type Database = {
       }
       clients: {
         Row: {
+          channel: string
           chapter: string | null
           created_at: string
+          current_procedure: string | null
+          cycle_days: number
           hair_type: string | null
           id: string
+          last_service_date: string | null
           name: string
           next_return: string | null
+          notes: string | null
+          phone: string | null
+          professional_id: string | null
           progress: number
+          updated_at: string
         }
         Insert: {
+          channel?: string
           chapter?: string | null
           created_at?: string
+          current_procedure?: string | null
+          cycle_days?: number
           hair_type?: string | null
           id?: string
+          last_service_date?: string | null
           name: string
           next_return?: string | null
+          notes?: string | null
+          phone?: string | null
+          professional_id?: string | null
           progress?: number
+          updated_at?: string
         }
         Update: {
+          channel?: string
           chapter?: string | null
           created_at?: string
+          current_procedure?: string | null
+          cycle_days?: number
           hair_type?: string | null
           id?: string
+          last_service_date?: string | null
           name?: string
           next_return?: string | null
+          notes?: string | null
+          phone?: string | null
+          professional_id?: string | null
           progress?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -121,6 +145,100 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      reactivations: {
+        Row: {
+          channel: string
+          client_id: string
+          created_at: string
+          id: string
+          message: string | null
+          outcome: string
+          professional_id: string
+          updated_at: string
+        }
+        Insert: {
+          channel?: string
+          client_id: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          outcome?: string
+          professional_id: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          outcome?: string
+          professional_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reactivations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          after_url: string | null
+          before_url: string | null
+          client_id: string
+          created_at: string
+          cycle_days: number
+          id: string
+          next_procedure: string | null
+          notes: string | null
+          procedure: string
+          professional_id: string
+          service_date: string
+          updated_at: string
+        }
+        Insert: {
+          after_url?: string | null
+          before_url?: string | null
+          client_id: string
+          created_at?: string
+          cycle_days?: number
+          id?: string
+          next_procedure?: string | null
+          notes?: string | null
+          procedure: string
+          professional_id: string
+          service_date?: string
+          updated_at?: string
+        }
+        Update: {
+          after_url?: string | null
+          before_url?: string | null
+          client_id?: string
+          created_at?: string
+          cycle_days?: number
+          id?: string
+          next_procedure?: string | null
+          notes?: string | null
+          procedure?: string
+          professional_id?: string
+          service_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
