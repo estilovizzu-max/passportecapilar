@@ -17,6 +17,7 @@ import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ComunicacaoRouteImport } from './routes/comunicacao'
 import { Route as EditarPerfilRouteImport } from './routes/editar-perfil'
 import { Route as InicioRouteImport } from './routes/inicio'
+import { Route as IntelligenceRouteImport } from './routes/intelligence'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
@@ -65,6 +66,11 @@ const InicioRoute = InicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IntelligenceRoute = IntelligenceRouteImport.update({
+  id: '/intelligence',
+  path: '/intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PassaporteRoute = PassaporteRouteImport.update({
   id: '/passaporte',
   path: '/passaporte',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/comunicacao': typeof ComunicacaoRoute
   '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
+  '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/comunicacao': typeof ComunicacaoRoute
   '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
+  '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/comunicacao': typeof ComunicacaoRoute
   '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
+  '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/comunicacao'
     | '/editar-perfil'
     | '/inicio'
+    | '/intelligence'
     | '/passaporte'
     | '/perfil'
     | '/proximo-capitulo'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/comunicacao'
     | '/editar-perfil'
     | '/inicio'
+    | '/intelligence'
     | '/passaporte'
     | '/perfil'
     | '/proximo-capitulo'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/comunicacao'
     | '/editar-perfil'
     | '/inicio'
+    | '/intelligence'
     | '/passaporte'
     | '/perfil'
     | '/proximo-capitulo'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   ComunicacaoRoute: typeof ComunicacaoRoute
   EditarPerfilRoute: typeof EditarPerfilRoute
   InicioRoute: typeof InicioRoute
+  IntelligenceRoute: typeof IntelligenceRoute
   PassaporteRoute: typeof PassaporteRoute
   PerfilRoute: typeof PerfilRoute
   ProximoCapituloRoute: typeof ProximoCapituloRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InicioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/intelligence': {
+      id: '/intelligence'
+      path: '/intelligence'
+      fullPath: '/intelligence'
+      preLoaderRoute: typeof IntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/passaporte': {
       id: '/passaporte'
       path: '/passaporte'
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComunicacaoRoute: ComunicacaoRoute,
   EditarPerfilRoute: EditarPerfilRoute,
   InicioRoute: InicioRoute,
+  IntelligenceRoute: IntelligenceRoute,
   PassaporteRoute: PassaporteRoute,
   PerfilRoute: PerfilRoute,
   ProximoCapituloRoute: ProximoCapituloRoute,
