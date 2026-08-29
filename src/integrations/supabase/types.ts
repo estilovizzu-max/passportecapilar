@@ -119,6 +119,106 @@ export type Database = {
         }
         Relationships: []
       }
+      intelligence_declarations: {
+        Row: {
+          archived: boolean
+          client_id: string
+          content: string
+          created_at: string
+          id: string
+          kind: string
+          label: string
+          professional_id: string
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          client_id: string
+          content: string
+          created_at?: string
+          id?: string
+          kind?: string
+          label: string
+          professional_id: string
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          client_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          label?: string
+          professional_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_declarations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intelligence_reviews: {
+        Row: {
+          action: string
+          client_id: string
+          created_at: string
+          data_version: Json
+          id: string
+          item_id: string
+          item_label: string
+          item_natureza: string
+          item_value: string
+          note: string | null
+          professional_id: string
+          section_key: string
+          surface: string
+        }
+        Insert: {
+          action: string
+          client_id: string
+          created_at?: string
+          data_version?: Json
+          id?: string
+          item_id: string
+          item_label: string
+          item_natureza: string
+          item_value: string
+          note?: string | null
+          professional_id: string
+          section_key: string
+          surface?: string
+        }
+        Update: {
+          action?: string
+          client_id?: string
+          created_at?: string
+          data_version?: Json
+          id?: string
+          item_id?: string
+          item_label?: string
+          item_natureza?: string
+          item_value?: string
+          note?: string | null
+          professional_id?: string
+          section_key?: string
+          surface?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
