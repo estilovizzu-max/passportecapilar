@@ -17,8 +17,10 @@ import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ComunicacaoRouteImport } from './routes/comunicacao'
 import { Route as EditarPerfilRouteImport } from './routes/editar-perfil'
 import { Route as InicioRouteImport } from './routes/inicio'
+import { Route as IntelligenceRouteImport } from './routes/intelligence'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
 import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as PrepararAtendimentoRouteImport } from './routes/preparar-atendimento'
 import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
 import { Route as RegistrarRouteImport } from './routes/registrar'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -65,6 +67,11 @@ const InicioRoute = InicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IntelligenceRoute = IntelligenceRouteImport.update({
+  id: '/intelligence',
+  path: '/intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PassaporteRoute = PassaporteRouteImport.update({
   id: '/passaporte',
   path: '/passaporte',
@@ -73,6 +80,11 @@ const PassaporteRoute = PassaporteRouteImport.update({
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrepararAtendimentoRoute = PrepararAtendimentoRouteImport.update({
+  id: '/preparar-atendimento',
+  path: '/preparar-atendimento',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProximoCapituloRoute = ProximoCapituloRouteImport.update({
@@ -110,8 +122,10 @@ export interface FileRoutesByFullPath {
   '/comunicacao': typeof ComunicacaoRoute
   '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
+  '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
+  '/preparar-atendimento': typeof PrepararAtendimentoRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -127,8 +141,10 @@ export interface FileRoutesByTo {
   '/comunicacao': typeof ComunicacaoRoute
   '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
+  '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
+  '/preparar-atendimento': typeof PrepararAtendimentoRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -145,8 +161,10 @@ export interface FileRoutesById {
   '/comunicacao': typeof ComunicacaoRoute
   '/editar-perfil': typeof EditarPerfilRoute
   '/inicio': typeof InicioRoute
+  '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
+  '/preparar-atendimento': typeof PrepararAtendimentoRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -164,8 +182,10 @@ export interface FileRouteTypes {
     | '/comunicacao'
     | '/editar-perfil'
     | '/inicio'
+    | '/intelligence'
     | '/passaporte'
     | '/perfil'
+    | '/preparar-atendimento'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -181,8 +201,10 @@ export interface FileRouteTypes {
     | '/comunicacao'
     | '/editar-perfil'
     | '/inicio'
+    | '/intelligence'
     | '/passaporte'
     | '/perfil'
+    | '/preparar-atendimento'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -198,8 +220,10 @@ export interface FileRouteTypes {
     | '/comunicacao'
     | '/editar-perfil'
     | '/inicio'
+    | '/intelligence'
     | '/passaporte'
     | '/perfil'
+    | '/preparar-atendimento'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -216,8 +240,10 @@ export interface RootRouteChildren {
   ComunicacaoRoute: typeof ComunicacaoRoute
   EditarPerfilRoute: typeof EditarPerfilRoute
   InicioRoute: typeof InicioRoute
+  IntelligenceRoute: typeof IntelligenceRoute
   PassaporteRoute: typeof PassaporteRoute
   PerfilRoute: typeof PerfilRoute
+  PrepararAtendimentoRoute: typeof PrepararAtendimentoRoute
   ProximoCapituloRoute: typeof ProximoCapituloRoute
   RegistrarRoute: typeof RegistrarRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -283,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InicioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/intelligence': {
+      id: '/intelligence'
+      path: '/intelligence'
+      fullPath: '/intelligence'
+      preLoaderRoute: typeof IntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/passaporte': {
       id: '/passaporte'
       path: '/passaporte'
@@ -295,6 +328,13 @@ declare module '@tanstack/react-router' {
       path: '/perfil'
       fullPath: '/perfil'
       preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preparar-atendimento': {
+      id: '/preparar-atendimento'
+      path: '/preparar-atendimento'
+      fullPath: '/preparar-atendimento'
+      preLoaderRoute: typeof PrepararAtendimentoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/proximo-capitulo': {
@@ -344,8 +384,10 @@ const rootRouteChildren: RootRouteChildren = {
   ComunicacaoRoute: ComunicacaoRoute,
   EditarPerfilRoute: EditarPerfilRoute,
   InicioRoute: InicioRoute,
+  IntelligenceRoute: IntelligenceRoute,
   PassaporteRoute: PassaporteRoute,
   PerfilRoute: PerfilRoute,
+  PrepararAtendimentoRoute: PrepararAtendimentoRoute,
   ProximoCapituloRoute: ProximoCapituloRoute,
   RegistrarRoute: RegistrarRoute,
   AuthCallbackRoute: AuthCallbackRoute,
