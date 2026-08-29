@@ -20,6 +20,7 @@ import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as IntelligenceRouteImport } from './routes/intelligence'
 import { Route as PassaporteRouteImport } from './routes/passaporte'
 import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as PrepararAtendimentoRouteImport } from './routes/preparar-atendimento'
 import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
 import { Route as RegistrarRouteImport } from './routes/registrar'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -81,6 +82,11 @@ const PerfilRoute = PerfilRouteImport.update({
   path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrepararAtendimentoRoute = PrepararAtendimentoRouteImport.update({
+  id: '/preparar-atendimento',
+  path: '/preparar-atendimento',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProximoCapituloRoute = ProximoCapituloRouteImport.update({
   id: '/proximo-capitulo',
   path: '/proximo-capitulo',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
+  '/preparar-atendimento': typeof PrepararAtendimentoRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
+  '/preparar-atendimento': typeof PrepararAtendimentoRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/intelligence': typeof IntelligenceRoute
   '/passaporte': typeof PassaporteRoute
   '/perfil': typeof PerfilRoute
+  '/preparar-atendimento': typeof PrepararAtendimentoRoute
   '/proximo-capitulo': typeof ProximoCapituloRoute
   '/registrar': typeof RegistrarRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/intelligence'
     | '/passaporte'
     | '/perfil'
+    | '/preparar-atendimento'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/intelligence'
     | '/passaporte'
     | '/perfil'
+    | '/preparar-atendimento'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/intelligence'
     | '/passaporte'
     | '/perfil'
+    | '/preparar-atendimento'
     | '/proximo-capitulo'
     | '/registrar'
     | '/auth/callback'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   IntelligenceRoute: typeof IntelligenceRoute
   PassaporteRoute: typeof PassaporteRoute
   PerfilRoute: typeof PerfilRoute
+  PrepararAtendimentoRoute: typeof PrepararAtendimentoRoute
   ProximoCapituloRoute: typeof ProximoCapituloRoute
   RegistrarRoute: typeof RegistrarRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preparar-atendimento': {
+      id: '/preparar-atendimento'
+      path: '/preparar-atendimento'
+      fullPath: '/preparar-atendimento'
+      preLoaderRoute: typeof PrepararAtendimentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/proximo-capitulo': {
       id: '/proximo-capitulo'
       path: '/proximo-capitulo'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntelligenceRoute: IntelligenceRoute,
   PassaporteRoute: PassaporteRoute,
   PerfilRoute: PerfilRoute,
+  PrepararAtendimentoRoute: PrepararAtendimentoRoute,
   ProximoCapituloRoute: ProximoCapituloRoute,
   RegistrarRoute: RegistrarRoute,
   AuthCallbackRoute: AuthCallbackRoute,
