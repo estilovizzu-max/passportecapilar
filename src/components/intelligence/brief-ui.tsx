@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, Pencil, X } from "lucide-react";
 import type { IntelligenceItem } from "@/lib/intelligence/types";
+import type { DataVersion } from "@/lib/intelligence/data-version";
+
 
 export type ItemEstado = "pendente" | "confirmado" | "descartado";
 
