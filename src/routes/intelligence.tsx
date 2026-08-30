@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Screen, Ornament } from "@/components/passport/ui";
-import { ClienteSelect, SectionCard } from "@/components/intelligence/brief-ui";
+import { ClienteSelect, DataVersionCard, SectionCard } from "@/components/intelligence/brief-ui";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { usePassaportes } from "@/lib/passport-api";
 import { construirBrief } from "@/lib/intelligence/brief";
+import { computarDataVersion } from "@/lib/intelligence/data-version";
+import { useRegistrarReview } from "@/lib/intelligence/reviews-api";
 
 export const Route = createFileRoute("/intelligence")({
   head: () => ({
@@ -31,6 +34,7 @@ function IntelligenceBrief() {
   useRequireAuth();
   const { data, isLoading } = usePassaportes();
   const [clienteId, setClienteId] = useState("");
+  const registrar = useRegistrarReview();
 
   const passaporte = useMemo(() => {
     if (!data?.length) return null;
@@ -38,6 +42,11 @@ function IntelligenceBrief() {
   }, [data, clienteId]);
 
   const brief = useMemo(() => (passaporte ? construirBrief(passaporte) : null), [passaporte]);
+
+  const versao = useMemo(
+    () => (passaporte && brief ? computarDataVersion(passaporte, brief, brief.geradoEm) : null),
+    [passaporte, brief],
+  );
 
   return (
     <Screen back backTo="/clientes">
@@ -60,13 +69,15 @@ function IntelligenceBrief() {
         </p>
       )}
 
-      {passaporte && brief && (
+      {passaporte && brief && versao && (
         <div className="mt-4 space-y-4">
           <ClienteSelect
             valor={passaporte.cliente.id}
             onChange={setClienteId}
             opcoes={(data ?? []).map((p) => ({ id: p.cliente.id, nome: p.cliente.name }))}
           />
+
+          <DataVersionCard versao={versao} />
 
           {brief.secoes.map((s) => (
             <SectionCard
@@ -76,6 +87,27 @@ function IntelligenceBrief() {
               itens={s.itens}
               vazio={s.vazio}
               acoes
+              sectionKey={s.key}
+              onAcao={(item, acao, ctx) => {
+                registrar.mutate(
+                  {
+                    clientId: passaporte.cliente.id,
+                    surface: "intelligence-brief",
+                    sectionKey: ctx.sectionKey,
+                    itemId: item.id,
+                    itemLabel: item.rotulo,
+                    itemValue: item.valor,
+                    itemNatureza: item.natureza,
+                    action: acao,
+                    note: ctx.nota ?? null,
+                    dataVersion: versao,
+                  },
+                  {
+                    onSuccess: () => toast.success("Registrado na trilha de auditoria."),
+                    onError: (e) => toast.error((e as Error).message),
+                  },
+                );
+              }}
             />
           ))}
 
@@ -84,6 +116,13 @@ function IntelligenceBrief() {
             className="flex w-full items-center justify-center rounded-full border border-gold/70 bg-card px-6 py-3.5 font-display text-sm tracking-[0.14em] text-primary"
           >
             PREPARAR MEU ATENDIMENTO
+          </Link>
+
+          <Link
+            to="/auditoria"
+            className="flex w-full items-center justify-center rounded-full border border-gold/40 bg-card px-6 py-3.5 font-display text-sm tracking-[0.14em] text-muted-foreground"
+          >
+            TRILHA DE AUDITORIA
           </Link>
 
           <p className="pb-2 text-center text-[11px] leading-snug text-muted-foreground">
