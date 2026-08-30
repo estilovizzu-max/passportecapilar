@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, Pencil, X } from "lucide-react";
 import type { IntelligenceItem } from "@/lib/intelligence/types";
+import type { DataVersion } from "@/lib/intelligence/data-version";
+
 
 export type ItemEstado = "pendente" | "confirmado" | "descartado";
 
@@ -17,12 +19,24 @@ export function NaturezaTag({ item }: { item: IntelligenceItem }) {
   );
 }
 
+export type ItemAcao = "confirmar" | "editar" | "descartar";
+
+export type ItemAcaoHandler = (
+  item: IntelligenceItem,
+  acao: ItemAcao,
+  contexto: { sectionKey: string; nota?: string },
+) => void;
+
 export function ItemLinha({
   item,
   acoes = false,
+  sectionKey = "",
+  onAcao,
 }: {
   item: IntelligenceItem;
   acoes?: boolean;
+  sectionKey?: string;
+  onAcao?: ItemAcaoHandler;
 }) {
   const [estado, setEstado] = useState<ItemEstado>("pendente");
   const [editando, setEditando] = useState(false);
@@ -51,7 +65,10 @@ export function ItemLinha({
         <div className="mt-2 flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setEstado("confirmado")}
+            onClick={() => {
+              setEstado("confirmado");
+              onAcao?.(item, "confirmar", { sectionKey });
+            }}
             aria-label="Confirmar"
             className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] tracking-[0.14em] ${
               estado === "confirmado"
@@ -71,7 +88,10 @@ export function ItemLinha({
           </button>
           <button
             type="button"
-            onClick={() => setEstado("descartado")}
+            onClick={() => {
+              setEstado("descartado");
+              onAcao?.(item, "descartar", { sectionKey });
+            }}
             aria-label="Descartar"
             className="flex items-center gap-1 rounded-full border border-muted-foreground/40 px-2.5 py-1 text-[10px] tracking-[0.14em] text-muted-foreground"
           >
@@ -89,9 +109,22 @@ export function ItemLinha({
             placeholder="Anotação desta leitura (não altera o histórico da cliente)"
             className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink"
           />
-          <p className="mt-1 text-[10px] text-muted-foreground">
-            A anotação vale apenas para esta leitura. O histórico registrado não é alterado.
-          </p>
+          <div className="mt-1 flex items-center justify-between gap-2">
+            <p className="text-[10px] text-muted-foreground">
+              A anotação vale apenas para esta leitura. O histórico registrado não é alterado.
+            </p>
+            <button
+              type="button"
+              disabled={!nota.trim()}
+              onClick={() => {
+                onAcao?.(item, "editar", { sectionKey, nota: nota.trim() });
+                setEditando(false);
+              }}
+              className="shrink-0 rounded-full border border-gold/60 px-2.5 py-1 text-[10px] tracking-[0.14em] text-gold disabled:opacity-40"
+            >
+              SALVAR NA TRILHA
+            </button>
+          </div>
         </div>
       )}
     </li>
@@ -104,12 +137,16 @@ export function SectionCard({
   itens,
   vazio,
   acoes = false,
+  sectionKey = "",
+  onAcao,
 }: {
   titulo: string;
   descricao: string;
   itens: IntelligenceItem[];
   vazio: string;
   acoes?: boolean;
+  sectionKey?: string;
+  onAcao?: ItemAcaoHandler;
 }) {
   return (
     <section className="parchment-card p-4">
@@ -120,13 +157,56 @@ export function SectionCard({
       ) : (
         <ul className="mt-2">
           {itens.map((i) => (
-            <ItemLinha key={i.id} item={i} acoes={acoes} />
+            <ItemLinha
+              key={i.id}
+              item={i}
+              acoes={acoes}
+              sectionKey={sectionKey}
+              {...(onAcao ? { onAcao } : {})}
+            />
           ))}
         </ul>
       )}
     </section>
   );
 }
+
+/** Cartão que mostra a data_version usada na leitura e o que a compõe. */
+export function DataVersionCard({ versao }: { versao: DataVersion }) {
+  return (
+    <section className="parchment-card p-4">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="font-display text-sm tracking-[0.22em] text-primary">VERSÃO DOS DADOS</h3>
+        <span className="rounded-full border border-gold/60 px-2 py-0.5 font-mono text-[10px] text-gold">
+          #{versao.hash}
+        </span>
+      </div>
+      <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+        {[
+          ["Atendimentos", String(versao.atendimentos)],
+          ["Último serviço", versao.ultimoServico ?? "—"],
+          [
+            "Cadastro atualizado",
+            versao.clienteAtualizadoEm
+              ? new Date(versao.clienteAtualizadoEm).toLocaleString("pt-BR")
+              : "—",
+          ],
+          ["Gerado em", new Date(versao.geradoEm).toLocaleString("pt-BR")],
+        ].map(([k, v]) => (
+          <div key={k}>
+            <dt className="tracking-[0.14em] text-muted-foreground">{k?.toUpperCase()}</dt>
+            <dd className="text-ink">{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-2 text-[10px] leading-snug text-muted-foreground">
+        O código da versão depende apenas dos dados registrados — a mesma janela de dados sempre
+        gera o mesmo código.
+      </p>
+    </section>
+  );
+}
+
 
 export function ClienteSelect({
   valor,

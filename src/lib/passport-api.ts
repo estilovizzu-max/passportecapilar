@@ -16,7 +16,9 @@ export type ClientRow = {
   chapter: string | null;
   progress: number;
   created_at: string;
+  updated_at?: string;
 };
+
 
 export type ServiceRow = {
   id: string;

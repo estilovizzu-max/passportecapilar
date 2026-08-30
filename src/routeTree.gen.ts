@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AcessoClienteRouteImport } from './routes/acesso-cliente'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuditoriaRouteImport } from './routes/auditoria'
 import { Route as BrandStudioRouteImport } from './routes/brand-studio'
 import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ComunicacaoRouteImport } from './routes/comunicacao'
@@ -40,6 +41,11 @@ const AcessoClienteRoute = AcessoClienteRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditoriaRoute = AuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrandStudioRoute = BrandStudioRouteImport.update({
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
   '/admin': typeof AdminRoute
+  '/auditoria': typeof AuditoriaRoute
   '/brand-studio': typeof BrandStudioRoute
   '/clientes': typeof ClientesRoute
   '/comunicacao': typeof ComunicacaoRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
   '/admin': typeof AdminRoute
+  '/auditoria': typeof AuditoriaRoute
   '/brand-studio': typeof BrandStudioRoute
   '/clientes': typeof ClientesRoute
   '/comunicacao': typeof ComunicacaoRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/acesso-cliente': typeof AcessoClienteRoute
   '/admin': typeof AdminRoute
+  '/auditoria': typeof AuditoriaRoute
   '/brand-studio': typeof BrandStudioRoute
   '/clientes': typeof ClientesRoute
   '/comunicacao': typeof ComunicacaoRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acesso-cliente'
     | '/admin'
+    | '/auditoria'
     | '/brand-studio'
     | '/clientes'
     | '/comunicacao'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acesso-cliente'
     | '/admin'
+    | '/auditoria'
     | '/brand-studio'
     | '/clientes'
     | '/comunicacao'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/acesso-cliente'
     | '/admin'
+    | '/auditoria'
     | '/brand-studio'
     | '/clientes'
     | '/comunicacao'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AcessoClienteRoute: typeof AcessoClienteRoute
   AdminRoute: typeof AdminRoute
+  AuditoriaRoute: typeof AuditoriaRoute
   BrandStudioRoute: typeof BrandStudioRoute
   ClientesRoute: typeof ClientesRoute
   ComunicacaoRoute: typeof ComunicacaoRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auditoria': {
+      id: '/auditoria'
+      path: '/auditoria'
+      fullPath: '/auditoria'
+      preLoaderRoute: typeof AuditoriaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brand-studio': {
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AcessoClienteRoute: AcessoClienteRoute,
   AdminRoute: AdminRoute,
+  AuditoriaRoute: AuditoriaRoute,
   BrandStudioRoute: BrandStudioRoute,
   ClientesRoute: ClientesRoute,
   ComunicacaoRoute: ComunicacaoRoute,
