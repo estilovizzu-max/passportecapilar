@@ -236,3 +236,100 @@ export function ClienteSelect({
     </label>
   );
 }
+
+/** Declarações explícitas da profissional — preenchem lacunas sem tocar no histórico. */
+export function DeclaracoesCard({
+  itens,
+  onAdicionar,
+  onArquivar,
+  salvando = false,
+}: {
+  itens: { id: string; kind: string; label: string; content: string }[];
+  onAdicionar: (d: { kind: "preference" | "goal"; label: string; content: string }) => void;
+  onArquivar: (id: string) => void;
+  salvando?: boolean;
+}) {
+  const [kind, setKind] = useState<"preference" | "goal">("preference");
+  const [label, setLabel] = useState("");
+  const [content, setContent] = useState("");
+
+  return (
+    <section className="parchment-card p-4">
+      <h3 className="font-display text-sm tracking-[0.22em] text-primary">
+        DECLARADO PELA PROFISSIONAL
+      </h3>
+      <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
+        Preferências e objetivos que você declara explicitamente. Não alteram os capítulos
+        históricos registrados.
+      </p>
+
+      {itens.length > 0 && (
+        <ul className="mt-2">
+          {itens.map((d) => (
+            <li
+              key={d.id}
+              className="flex items-start justify-between gap-2 border-t border-gold/20 py-2.5 first:border-t-0"
+            >
+              <div className="min-w-0">
+                <p className="font-display text-[11px] tracking-[0.14em] text-muted-foreground">
+                  {d.kind === "goal" ? "OBJETIVO" : "PREFERÊNCIA"} · {d.label}
+                </p>
+                <p className="text-sm leading-snug text-ink">{d.content}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => onArquivar(d.id)}
+                aria-label="Arquivar declaração"
+                className="shrink-0 rounded-full border border-muted-foreground/40 px-2.5 py-1 text-[10px] tracking-[0.14em] text-muted-foreground"
+              >
+                ARQUIVAR
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-3 space-y-2">
+        <div className="flex gap-2">
+          {(["preference", "goal"] as const).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setKind(k)}
+              className={`rounded-full border px-3 py-1 text-[10px] tracking-[0.14em] ${
+                kind === k ? "border-gold bg-gold/15 text-gold" : "border-gold/40 text-muted-foreground"
+              }`}
+            >
+              {k === "preference" ? "PREFERÊNCIA" : "OBJETIVO"}
+            </button>
+          ))}
+        </div>
+        <input
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Título curto (ex.: Evitar química)"
+          className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink"
+        />
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={2}
+          placeholder="Informação declarada explicitamente"
+          className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink"
+        />
+        <button
+          type="button"
+          disabled={!label.trim() || !content.trim() || salvando}
+          onClick={() => {
+            onAdicionar({ kind, label: label.trim(), content: content.trim() });
+            setLabel("");
+            setContent("");
+          }}
+          className="w-full rounded-full border border-gold/70 bg-card px-6 py-3 font-display text-xs tracking-[0.14em] text-primary disabled:opacity-40"
+        >
+          DECLARAR INFORMAÇÃO
+        </button>
+      </div>
+    </section>
+  );
+}
