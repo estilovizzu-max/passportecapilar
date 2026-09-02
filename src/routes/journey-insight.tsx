@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Ornament, Screen } from "@/components/passport/ui";
 import { ClienteSelect, InsightCard, SectionCard } from "@/components/intelligence/brief-ui";
-import { usePassaportes } from "@/lib/passport-api";
+import { usePassaportes, type Passaporte } from "@/lib/passport-api";
 import { construirIntelligence } from "@/lib/intelligence/build";
 import type { IntelligenceItem } from "@/lib/intelligence/types";
 
@@ -29,7 +29,7 @@ const sectionDescription: Record<InsightSectionKey, string> = {
   "what-to-review": "Informacao a confirmar antes de tomar uma decisao.",
 };
 
-function buildJourneyInsight(p: ReturnType<typeof usePassaportes>["data"][number] | undefined) {
+function buildJourneyInsight(p: Passaporte | undefined) {
   if (!p) return null;
   const r = construirIntelligence(p);
 
