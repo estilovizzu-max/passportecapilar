@@ -219,6 +219,47 @@ export type Database = {
           },
         ]
       }
+      professional_connections: {
+        Row: {
+          client_id: string
+          id: string
+          note: string | null
+          professional_id: string
+          removed_at: string | null
+          requested_at: string
+          responded_at: string | null
+          status: string
+        }
+        Insert: {
+          client_id: string
+          id?: string
+          note?: string | null
+          professional_id: string
+          removed_at?: string | null
+          requested_at?: string
+          responded_at?: string | null
+          status?: string
+        }
+        Update: {
+          client_id?: string
+          id?: string
+          note?: string | null
+          professional_id?: string
+          removed_at?: string | null
+          requested_at?: string
+          responded_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professional_connections_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
