@@ -1,23 +1,157 @@
 import { useState } from "react";
-import { Check, Pencil, X } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Pencil, X } from "lucide-react";
 import type { IntelligenceItem } from "@/lib/intelligence/types";
 import type { DataVersion } from "@/lib/intelligence/data-version";
+
+// ─── Evidence Layer ────────────────────────────────────────────────────────────
+
+/** Origem legível para a profissional, sem terminologia de IA. */
+type EvidenceLabel =
+  | { kind: "recorded" }
+  | { kind: "interpretation"; confianca: string }
+  | { kind: "gap"; reason: string };
+
+function evidenciaLabel(item: IntelligenceItem): EvidenceLabel {
+  if (item.natureza === "fact" && item.origem === "record") {
+    return { kind: "recorded" };
+  }
+  if (item.evidencias.length === 0 && !item.valor) {
+    return { kind: "gap", reason: item.rotulo ?? "Informação não disponível" };
+  }
+  return {
+    kind: "interpretation",
+    confianca: item.confianca === "alta" ? "alta" : item.confianca === "baixa" ? "baixa" : "média",
+  };
+}
+
+function EvidenceLabelBadge({ label }: { label: EvidenceLabel }) {
+  if (label.kind === "recorded") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-primary/60 bg-primary/10 px-2 py-0.5 font-display text-[9px] tracking-[0.16em] text-primary">
+        RECORDED
+      </span>
+    );
+  }
+  if (label.kind === "gap") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-muted-foreground/50 bg-muted/50 px-2 py-0.5 font-display text-[9px] tracking-[0.16em] text-muted-foreground">
+        INFORMATION GAP
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-gold/60 bg-gold/10 px-2 py-0.5 font-display text-[9px] tracking-[0.16em] text-gold">
+      INTERPRETATION · {label.confianca.toUpperCase()}
+    </span>
+  );
+}
+
+interface EvidenceEntry {
+  tipo: string;
+  data?: string | null;
+  capitulo?: string | null;
+  informacao: string;
+}
+
+function parseEvidencia(item: IntelligenceItem): EvidenceEntry[] {
+  return item.evidencias.map((e) => ({
+    tipo: e.tipo === "cliente" ? "Cadastro" : e.tipo === "atendimento" ? "Atendimento" : e.tipo === "reativacao" ? "Reativação" : "Registro",
+    data: item.ocorridoEm ? new Date(item.ocorridoEm).toLocaleDateString("pt-BR") : undefined,
+    capitulo: e.descricao.split(" — ")[0] ?? e.descricao,
+    informacao: e.descricao,
+  }));
+}
+
+interface EvidenceSectionProps {
+  item: IntelligenceItem;
+  compact?: boolean;
+}
+
+export function EvidenceSection({ item, compact = false }: EvidenceSectionProps) {
+  const [open, setOpen] = useState(false);
+  const label = evidenciaLabel(item);
+  const entries = parseEvidencia(item);
+  const hasEvidence = entries.length > 0 || label.kind === "gap";
+
+  if (!hasEvidence) return null;
+
+  const title = label.kind === "recorded"
+    ? "FONTE DO REGISTRO"
+    : label.kind === "gap"
+    ? "INFORMAÇÃO AUSENTE"
+    : "EVIDÊNCIA";
+
+  return (
+    <div className="mt-2 rounded-lg border border-gold/30 bg-gold/5 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left transition-colors hover:bg-gold/10"
+      >
+        <div className="flex items-center gap-2">
+          <EvidenceLabelBadge label={label} />
+          <span className="font-display text-[9px] tracking-[0.18em] text-muted-foreground">
+            {title}
+          </span>
+        </div>
+        {open ? (
+          <ChevronUp className="h-3 w-3 shrink-0 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="h-3 w-3 shrink-0 text-muted-foreground" />
+        )}
+      </button>
+
+      {open && (
+        <div className={`px-3 pb-2.5 space-y-1.5 ${compact ? "" : ""}`}>
+          {label.kind === "gap" ? (
+            <p className="text-[11px] italic text-muted-foreground">{label.reason}</p>
+          ) : entries.length === 0 ? (
+            <p className="text-[11px] italic text-muted-foreground">
+              Sem evidência específica disponível no Passaporte.
+            </p>
+          ) : (
+            entries.map((e, i) => (
+              <div key={i} className="rounded-md border border-gold/20 bg-card/60 px-2.5 py-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {e.tipo && (
+                    <span className="font-display text-[9px] tracking-[0.14em] text-muted-foreground">
+                      {e.tipo.toUpperCase()}
+                    </span>
+                  )}
+                  {e.data && (
+                    <>
+                      <span className="text-[9px] text-muted-foreground/60">·</span>
+                      <span className="font-mono text-[9px] text-muted-foreground">{e.data}</span>
+                    </>
+                  )}
+                  {e.capitulo && (
+                    <>
+                      <span className="text-[9px] text-muted-foreground/60">·</span>
+                      <span className="font-display text-[9px] tracking-[0.1em] text-gold/80">
+                        {e.capitulo}
+                      </span>
+                    </>
+                  )}
+                </div>
+                {e.informacao && (
+                  <p className="mt-0.5 text-[11px] leading-snug text-ink">{e.informacao}</p>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Natureza Tag ─────────────────────────────────────────────────────────────
 
 export type ItemEstado = "pendente" | "confirmado" | "descartado";
 
 export function NaturezaTag({ item }: { item: IntelligenceItem }) {
-  const fato = item.natureza === "fact";
-  return (
-    <span
-      className={`inline-block rounded-full border px-2 py-0.5 text-[9px] tracking-[0.16em] transition-all duration-200 ${
-        fato
-          ? "border-primary/50 text-primary hover:border-primary hover:hover:bg-primary/10"
-          : "border-gold/60 text-gold hover:border-gold hover:bg-gold/10"
-      }`}
-    >
-      {fato ? "REGISTRADO" : `INTERPRETAÇÃO${item.confianca ? ` · ${item.confianca}` : ""}`}
-    </span>
-  );
+  const label = evidenciaLabel(item);
+  return <EvidenceLabelBadge label={label} />;
 }
 
 export type ItemAcao = "confirmar" | "editar" | "descartar";
@@ -58,6 +192,7 @@ export function ItemLinha({
               Nota da profissional: {nota}
             </p>
           )}
+          <EvidenceSection item={item} compact />
         </div>
         <div className="shrink-0">
           <NaturezaTag item={item} />
@@ -159,7 +294,7 @@ export function SectionCard({
         <p className="mt-3 text-sm italic text-muted-foreground">{vazio}</p>
       ) : (
         <ul className="mt-2">
-          {itens.map((i) => (
+          {itens.map((i) =>
             i.highlight ? (
               <InsightCard
                 key={i.id}
@@ -174,10 +309,10 @@ export function SectionCard({
                 item={i}
                 acoes={acoes}
                 sectionKey={sectionKey}
-                {...(onAcao ? { onAcao } : {})}
+                onAcao={onAcao}
               />
             )
-          ))}
+          )}
         </ul>
       )}
     </section>
@@ -197,7 +332,11 @@ export function InsightCard({
   onAcao?: ItemAcaoHandler;
 }) {
   const [estado, setEstado] = useState<ItemEstado>("pendente");
+  const [showEvidence, setShowEvidence] = useState(false);
+
   if (estado === "descartado") return null;
+
+  const label = evidenciaLabel(item);
 
   const confiancaLabel: Record<string, string> = { alta: "HIGH", media: "MEDIUM", baixa: "LOW" };
   const confiancaColor: Record<string, string> = {
@@ -205,8 +344,17 @@ export function InsightCard({
     media: "border-gold/60 text-gold",
     baixa: "border-muted-foreground/40 text-muted-foreground",
   };
-  const badgeClass = confiancaColor[item.confianca ?? "media"];
-  const badgeLabel = item.confianca ? confiancaLabel[item.confianca] : "MEDIUM";
+
+  const badgeClass = label.kind === "interpretation"
+    ? confiancaColor[item.confianca ?? "media"]
+    : label.kind === "recorded"
+    ? "border-primary/60 text-primary"
+    : "border-muted-foreground/40 text-muted-foreground";
+  const badgeLabel = label.kind === "recorded"
+    ? "RECORDED"
+    : label.kind === "gap"
+    ? "INFORMATION GAP"
+    : confiancaLabel[item.confianca ?? "media"];
 
   // BASIS: datas das evidências disponíveis
   const basisLines = item.evidencias
@@ -257,6 +405,11 @@ export function InsightCard({
         <p className="text-[11px] italic text-muted-foreground mt-0.5">
           Confirmar objetivo atual com a cliente.
         </p>
+      </div>
+
+      {/* EVIDENCE — expansível */}
+      <div className="mt-3">
+        <EvidenceSection item={item} />
       </div>
 
       {/* ACTION */}
