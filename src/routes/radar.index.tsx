@@ -31,34 +31,46 @@ type Filtro = Status | "todos";
 function RadarPage() {
   useRequireAuth();
   const { data, isLoading } = usePassaportes();
-  const [filtro, setFiltro] = useState<Filtro>("risco");
+  const [filtro, setFiltro] = useState<Filtro>("todos");
   const lista = data ?? [];
   const m = calcularMetricas(lista);
-  const filtrada = filtro === "todos" ? lista : lista.filter((p) => p.status === filtro);
 
-  const cards: { key: Filtro; cor: string; n: number; titulo: string; sub: string }[] = [
-    {
-      key: "risco",
-      cor: "text-destructive",
-      n: m.emRisco,
-      titulo: "EM RISCO",
-      sub: "Ultrapassaram o ciclo esperado",
-    },
+  const cards: { key: Filtro; cor: string; corBg: string; n: number; titulo: string; sub: string }[] = [
     {
       key: "janela",
       cor: "text-gold",
+      corBg: "border-gold/60",
       n: m.janela,
-      titulo: "PRÓXIMAS DO RETORNO",
-      sub: "Entrando na janela ideal",
+      titulo: "UPCOMING",
+      sub: "Janela ideal de retorno",
     },
     {
       key: "acompanhamento",
       cor: "text-primary",
+      corBg: "border-primary/60",
       n: m.acompanhamento,
-      titulo: "EM ACOMPANHAMENTO",
+      titulo: "DUE",
       sub: "Próximo capítulo definido",
     },
+    {
+      key: "risco",
+      cor: "text-destructive",
+      corBg: "border-destructive/60",
+      n: m.emRisco,
+      titulo: "OVERDUE",
+      sub: "Ultrapassaram o ciclo esperado",
+    },
+    {
+      key: "sem-historico",
+      cor: "text-muted-foreground",
+      corBg: "border-muted",
+      n: lista.filter((p) => p.status === "sem-historico").length,
+      titulo: "NO NEXT CHAPTER",
+      sub: "Histórico insuficiente",
+    },
   ];
+
+  const filtrada = filtro === "todos" ? lista : lista.filter((p) => p.status === filtro);
 
   return (
     <Screen back backTo="/inicio">
@@ -76,12 +88,12 @@ function RadarPage() {
               key={c.key}
               onClick={() => setFiltro(c.key)}
               className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-colors ${
-                filtro === c.key ? "border-gold bg-secondary" : "border-gold/40"
+                filtro === c.key ? "border-gold bg-secondary" : c.corBg
               }`}
             >
               <span className={`font-display text-3xl ${c.cor}`}>{c.n}</span>
               <span>
-                <span className="block font-display text-[11px] tracking-[0.12em] text-ink">
+                <span className={`block font-display text-[11px] tracking-[0.12em] ${filtro === c.key ? "text-ink" : "text-muted-foreground"}`}>
                   {c.titulo}
                 </span>
                 <span className="block text-[11px] text-muted-foreground">{c.sub}</span>
@@ -109,28 +121,48 @@ function RadarPage() {
       )}
 
       <ul className="mt-5 space-y-3">
-        {filtrada.map((p) => (
-          <li key={p.cliente.id}>
-            <Link
-              to="/radar/$clienteId"
-              params={{ clienteId: p.cliente.id }}
-              className="flex items-center gap-3 parchment-card px-3 py-3"
-            >
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full wine-surface font-display text-primary-foreground">
-                {p.cliente.name.charAt(0)}
-              </span>
-              <span className="flex-1">
-                <span className="block font-display text-lg text-ink">{p.cliente.name}</span>
-                <StatusBadge status={p.status} dias={p.diasRestantes} />
-              </span>
-              <span className="flex items-center gap-1.5 border-l border-dotted border-gold/60 pl-3">
-                <Calendar className="h-4 w-4 text-gold" />
-                <span className="font-display text-primary">{formatData(p.proximoRetorno)}</span>
-              </span>
-              <ChevronRight className="h-4 w-4 text-gold" />
-            </Link>
-          </li>
-        ))}
+        {filtrada.map((p) => {
+          const statusLabel: Record<string, string> = {
+            janela: "UPCOMING",
+            acompanhamento: "DUE",
+            risco: "OVERDUE",
+            "sem-historico": "NO CHAPTER",
+          };
+          return (
+            <li key={p.cliente.id}>
+              <Link
+                to="/radar/$clienteId"
+                params={{ clienteId: p.cliente.id }}
+                className="flex items-center gap-3 parchment-card px-3 py-3"
+              >
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full wine-surface font-display text-primary-foreground">
+                  {p.cliente.name.charAt(0)}
+                </span>
+                <span className="flex-1">
+                  <span className="block font-display text-lg text-ink">{p.cliente.name}</span>
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={p.status} dias={p.diasRestantes} />
+                    <span className="font-display text-[10px] tracking-[0.1em] text-muted-foreground">
+                      {statusLabel[p.status] ?? p.status}
+                    </span>
+                  </div>
+                </span>
+                <span className="flex flex-col items-end gap-1 border-l border-dotted border-gold/60 pl-3">
+                  <Calendar className="h-4 w-4 text-gold" />
+                  <span className="font-display text-primary text-sm">
+                    {p.proximoRetorno ? formatData(p.proximoRetorno) : "—"}
+                  </span>
+                  {p.ultimo && (
+                    <span className="text-[10px] text-muted-foreground">
+                      {p.ultimo.procedure}
+                    </span>
+                  )}
+                </span>
+                <ChevronRight className="h-4 w-4 text-gold" />
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </Screen>
   );
