@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Ornament, Screen } from "@/components/passport/ui";
 import { ClienteSelect, InsightCard, SectionCard } from "@/components/intelligence/brief-ui";
 import { usePassaportes } from "@/lib/passport-api";
