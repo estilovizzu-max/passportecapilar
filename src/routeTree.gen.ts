@@ -26,6 +26,7 @@ import { Route as ProximoCapituloRouteImport } from './routes/proximo-capitulo'
 import { Route as RegistrarRouteImport } from './routes/registrar'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as RadarIndexRouteImport } from './routes/radar.index'
+import { Route as JourneyInsightRouteImport } from './routes/journey-insight'
 import { Route as RadarClienteIdRouteImport } from './routes/radar.$clienteId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -118,6 +119,11 @@ const RadarClienteIdRoute = RadarClienteIdRouteImport.update({
   path: '/radar/$clienteId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JourneyInsightRoute = JourneyInsightRouteImport.update({
+  id: '/journey-insight',
+  path: '/journey-insight',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar/': typeof RadarIndexRoute
+  '/journey-insight': typeof JourneyInsightRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar': typeof RadarIndexRoute
+  '/journey-insight': typeof JourneyInsightRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/auth/callback': typeof AuthCallbackRoute
   '/radar/$clienteId': typeof RadarClienteIdRoute
   '/radar/': typeof RadarIndexRoute
+  '/journey-insight': typeof JourneyInsightRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar/'
+    | '/journey-insight'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar'
+    | '/journey-insight'
   id:
     | '__root__'
     | '/'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/radar/$clienteId'
     | '/radar/'
+    | '/journey-insight'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   RadarClienteIdRoute: typeof RadarClienteIdRoute
   RadarIndexRoute: typeof RadarIndexRoute
+  JourneyInsightRoute: typeof JourneyInsightRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -392,6 +405,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RadarClienteIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/journey-insight': {
+      id: '/journey-insight'
+      path: '/journey-insight'
+      fullPath: '/journey-insight'
+      preLoaderRoute: typeof JourneyInsightRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -414,6 +434,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   RadarClienteIdRoute: RadarClienteIdRoute,
   RadarIndexRoute: RadarIndexRoute,
+  JourneyInsightRoute: JourneyInsightRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
