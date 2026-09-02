@@ -163,7 +163,7 @@ export function construirIntelligence(p: Passaporte): IntelligenceRecord {
     );
 
   // 5. PATTERN — apenas com múltiplos registros
-  if (p.atendimentos.length >= 2) {
+  if (p.atendimentos.length >= 3) {
     const datas = p.atendimentos.map((s) => new Date(`${s.service_date}T12:00:00`).getTime());
     const gaps: number[] = [];
     for (let i = 0; i < datas.length - 1; i++)
@@ -179,6 +179,21 @@ export function construirIntelligence(p: Passaporte): IntelligenceRecord {
       ),
     );
 
+    // Detectar se os gaps são semelhantes entre si (desvio ≤ 20% da mediana)
+    const mediana = [...gaps].sort((a, b) => a - b)[Math.floor(gaps.length / 2)]!;
+    const semelhantes = gaps.every((g) => Math.abs(g - mediana) / mediana <= 0.2);
+    if (semelhantes) {
+      padroes.push(
+        interpretacao(
+          "pattern",
+          "Os últimos capítulos apresentam intervalos semelhantes.",
+          `${gaps.length} registro(s) encontrados. Média de ${medio} dias entre capítulos.`,
+          gaps.length >= 3 ? "alta" : "media",
+          p.atendimentos.map(evServico),
+        ),
+      );
+    }
+
     const contagem = new Map<string, number>();
     for (const s of p.atendimentos) contagem.set(s.procedure, (contagem.get(s.procedure) ?? 0) + 1);
     const recorrente = [...contagem.entries()].sort((a, b) => b[1] - a[1])[0];
@@ -192,8 +207,21 @@ export function construirIntelligence(p: Passaporte): IntelligenceRecord {
           p.atendimentos.filter((s) => s.procedure === recorrente[0]).map(evServico),
         ),
       );
+  } else if (p.atendimentos.length === 2) {
+    const datas = p.atendimentos.map((s) => new Date(`${s.service_date}T12:00:00`).getTime());
+    const gap = Math.round((datas[0]! - datas[1]!) / 86_400_000);
+    padroes.push(
+      interpretacao(
+        "pattern",
+        "Intervalo entre capítulos",
+        `${gap} dias entre os ${p.atendimentos.length} registros.`,
+        "media",
+        p.atendimentos.map(evServico),
+      ),
+    );
+    lacunas.push("Registros insuficientes para identificar padrões mais amplos (mínimo de 3 capítulos recomendado).");
   } else {
-    lacunas.push("Registros insuficientes para identificar padrões (mínimo de 2 capítulos).");
+    lacunas.push("Registros insuficientes para identificar padrões (mínimo de 3 capítulos recomendado).");
   }
 
   // 6. CHANGE — diferença entre o penúltimo e o último registro

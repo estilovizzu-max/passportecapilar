@@ -160,17 +160,105 @@ export function SectionCard({
       ) : (
         <ul className="mt-2">
           {itens.map((i) => (
-            <ItemLinha
-              key={i.id}
-              item={i}
-              acoes={acoes}
-              sectionKey={sectionKey}
-              {...(onAcao ? { onAcao } : {})}
-            />
+            i.highlight ? (
+              <InsightCard
+                key={i.id}
+                item={i}
+                acoes={acoes}
+                sectionKey={sectionKey}
+                onAcao={onAcao}
+              />
+            ) : (
+              <ItemLinha
+                key={i.id}
+                item={i}
+                acoes={acoes}
+                sectionKey={sectionKey}
+                {...(onAcao ? { onAcao } : {})}
+              />
+            )
           ))}
         </ul>
       )}
     </section>
+  );
+}
+
+/** Cartão de destaque visual para itens INSIGHT da seção PATTERN. */
+export function InsightCard({
+  item,
+  acoes = false,
+  sectionKey = "",
+  onAcao,
+}: {
+  item: IntelligenceItem;
+  acoes?: boolean;
+  sectionKey?: string;
+  onAcao?: ItemAcaoHandler;
+}) {
+  const [estado, setEstado] = useState<ItemEstado>("pendente");
+  if (estado === "descartado") return null;
+
+  const confiancaLabel: Record<string, string> = { alta: "HIGH", media: "MEDIUM", baixa: "LOW" };
+  const confiancaColor: Record<string, string> = {
+    alta: "border-primary/60 text-primary",
+    media: "border-gold/60 text-gold",
+    baixa: "border-muted-foreground/40 text-muted-foreground",
+  };
+  const badgeClass = confiancaColor[item.confianca ?? "media"];
+  const badgeLabel = item.confianca ? confiancaLabel[item.confianca] : "MEDIUM";
+
+  return (
+    <li className="rounded-xl border-2 border-gold/60 bg-gold/5 px-4 py-3.5 transition-all duration-300 hover:border-gold hover:shadow-[0_8px_30px_-8px_oklch(0.84_0.11_88_/_0.5)] animate-in fade-in slide-in-from-bottom-2">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-gold">◈</span>
+            <span className="rounded-full border border-gold/60 bg-gold/10 px-2.5 py-1 font-display text-[11px] tracking-[0.2em] text-gold">
+              INSIGHT
+            </span>
+            <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] tracking-[0.14em] ${badgeClass}`}>
+              {badgeLabel}
+            </span>
+          </div>
+          <p className="text-sm font-medium leading-snug text-ink">{item.valor}</p>
+          {item.evidencias.length > 0 && (
+            <p className="mt-1.5 text-[11px] text-muted-foreground">
+              {item.evidencias.length} registro{item.evidencias.length !== 1 ? "s" : ""} encontrado{item.evidencias.length !== 1 ? "s" : ""}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {acoes && (
+        <div className="mt-3 flex items-center gap-2 border-t border-gold/30 pt-3">
+          <button
+            type="button"
+            onClick={() => {
+              setEstado("confirmado");
+              onAcao?.(item, "confirmar", { sectionKey });
+            }}
+            className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[10px] tracking-[0.14em] transition-all duration-200 ${
+              estado === "confirmado"
+                ? "border-primary bg-primary text-primary-foreground scale-95 shadow-sm"
+                : "border-primary/40 text-primary hover:border-primary hover:bg-primary/15 hover:scale-[1.03] hover:shadow-sm"
+            }`}
+          >
+            <Check className="h-3 w-3" /> CONFIRM
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setEstado("descartado");
+              onAcao?.(item, "descartar", { sectionKey });
+            }}
+            className="flex items-center gap-1.5 rounded-full border border-muted-foreground/40 px-3.5 py-1.5 text-[10px] tracking-[0.14em] text-muted-foreground transition-all duration-200 hover:border-destructive/70 hover:text-destructive hover:bg-destructive/10 hover:scale-[1.03] hover:shadow-sm"
+          >
+            <X className="h-3 w-3" /> DISMISS
+          </button>
+        </div>
+      )}
+    </li>
   );
 }
 

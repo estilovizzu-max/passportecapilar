@@ -64,6 +64,8 @@ export type IntelligenceItem = {
   valor: string;
   /** Presente somente quando `natureza === "interpretation"`. */
   confianca?: Confianca;
+  /** Indica que o item deve ser exibido como cartão de destaque visual (INSIGHT). */
+  highlight?: boolean;
   ocorridoEm?: string | null;
   evidencias: Evidencia[];
 };
