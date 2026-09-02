@@ -1,6 +1,7 @@
 import { formatDataLonga, type Passaporte } from "@/lib/passport-api";
 import { construirIntelligence } from "./build";
 import type { IntelligenceItem, IntelligenceRecord } from "./types";
+import { declaracoesComoItens, type DeclaracaoRow } from "./declarations-api";
 
 export const SEM_INFO = "Informação insuficiente para uma leitura segura.";
 
@@ -66,12 +67,21 @@ const secao = (
 });
 
 /** Monta o Intelligence Brief a partir apenas do que está registrado. */
-export function construirBrief(p: Passaporte, base?: IntelligenceRecord): Brief {
+export function construirBrief(
+  p: Passaporte,
+  base?: IntelligenceRecord,
+  declarations?: DeclaracaoRow[],
+): Brief {
   const r = base ?? construirIntelligence(p);
 
   const identidade = r.fatos.filter((i) =>
     ["Tipo de cabelo", "Protocolo atual", "Ciclo registrado"].includes(i.rotulo),
   );
+
+  const desejoItems = [
+    ...r.preferencias,
+    ...(declarations ? declaracoesComoItens(declarations) : []),
+  ];
 
   return {
     record: r,
@@ -83,7 +93,7 @@ export function construirBrief(p: Passaporte, base?: IntelligenceRecord): Brief 
       secao("now", r.contexto),
       secao("history", r.jornada.slice(0, 6)),
       secao("change", r.mudancas),
-      secao("desire", r.preferencias),
+      secao("desire", desejoItems),
       secao("pattern", r.padroes),
       secao("next", r.consideracoes),
       secao(

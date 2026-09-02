@@ -2,12 +2,17 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Screen, Ornament } from "@/components/passport/ui";
-import { ClienteSelect, DataVersionCard, SectionCard } from "@/components/intelligence/brief-ui";
+import { ClienteSelect, DataVersionCard, DeclaracoesCard, SectionCard } from "@/components/intelligence/brief-ui";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { usePassaportes } from "@/lib/passport-api";
 import { construirBrief } from "@/lib/intelligence/brief";
 import { computarDataVersion } from "@/lib/intelligence/data-version";
 import { useRegistrarReview } from "@/lib/intelligence/reviews-api";
+import {
+  useAdicionarDeclaracao,
+  useArquivarDeclaracao,
+  useDeclaracoes,
+} from "@/lib/intelligence/declarations-api";
 
 export const Route = createFileRoute("/intelligence")({
   head: () => ({
@@ -36,12 +41,19 @@ function IntelligenceBrief() {
   const [clienteId, setClienteId] = useState("");
   const registrar = useRegistrarReview();
 
+  const { data: declarations } = useDeclaracoes(clienteId || undefined);
+  const adicionarDeclaracao = useAdicionarDeclaracao();
+  const arquivarDeclaracao = useArquivarDeclaracao();
+
   const passaporte = useMemo(() => {
     if (!data?.length) return null;
     return data.find((p) => p.cliente.id === clienteId) ?? data[0]!;
   }, [data, clienteId]);
 
-  const brief = useMemo(() => (passaporte ? construirBrief(passaporte) : null), [passaporte]);
+  const brief = useMemo(
+    () => (passaporte ? construirBrief(passaporte, undefined, declarations) : null),
+    [passaporte, declarations],
+  );
 
   const versao = useMemo(
     () => (passaporte && brief ? computarDataVersion(passaporte, brief, brief.geradoEm) : null),
@@ -110,6 +122,30 @@ function IntelligenceBrief() {
               }}
             />
           ))}
+
+          <DeclaracoesCard
+            itens={(declarations ?? []).map((d) => ({
+              id: d.id,
+              kind: d.kind,
+              label: d.label,
+              content: d.content,
+            }))}
+            salvando={adicionarDeclaracao.isPending}
+            onAdicionar={(d) =>
+              adicionarDeclaracao.mutate({
+                clientId: passaporte.cliente.id,
+                kind: d.kind,
+                label: d.label,
+                content: d.content,
+              })
+            }
+            onArquivar={(id) =>
+              arquivarDeclaracao.mutate(id, {
+                onSuccess: () => toast.success("Declaração arquivada."),
+                onError: (e) => toast.error((e as Error).message),
+              })
+            }
+          />
 
           <Link
             to="/preparar-atendimento"
