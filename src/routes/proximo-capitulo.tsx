@@ -1,103 +1,102 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Calendar, Droplet, Feather, Flame, Sparkles } from "lucide-react";
-import { toast } from "sonner";
-import { Ornament, Screen, Stamp, WineButton } from "@/components/passport/ui";
+import { useMemo, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Screen, Ornament } from "@/components/passport/ui";
+import { ClienteSelect, SectionCard } from "@/components/intelligence/brief-ui";
 import { useRequireAuth } from "@/hooks/useAuth";
+import { usePassaportes } from "@/lib/passport-api";
+import { construirProximoDestino } from "@/lib/intelligence/brief";
 
 export const Route = createFileRoute("/proximo-capitulo")({
   head: () => ({
     meta: [
-      { title: "Próximo capítulo — Passaporte Capilar" },
+      { title: "Próximo Destino — Passaporte Capilar" },
       {
         name: "description",
         content:
-          "Nutrição intensiva: destino aprovado com data confirmada e benefícios do próximo cuidado capilar.",
+          "Leitura da possível direção da jornada baseada no histórico registrado. A decisão final é sempre da profissional.",
       },
-      { property: "og:title", content: "Próximo capítulo: Nutrição Intensiva" },
+      { property: "og:title", content: "Próximo Destino — Passaporte Capilar" },
       {
         property: "og:description",
-        content: "Seu próximo cuidado já está liberado. Confirme o destino.",
+        content:
+          "Os registros disponíveis indicam uma direção possível para a jornada — a profissional decide o próximo capítulo.",
       },
     ],
   }),
   component: ProximoCapitulo,
 });
 
-const beneficios = [
-  { icon: Feather, texto: "Mais maciez" },
-  { icon: Sparkles, texto: "Brilho renovado" },
-  { icon: Flame, texto: "Fios nutridos" },
-];
-
 function ProximoCapitulo() {
   useRequireAuth();
+  const { data, isLoading } = usePassaportes();
+  const [clienteId, setClienteId] = useState("");
+
+  const passaporte = useMemo(() => {
+    if (!data?.length) return null;
+    return data.find((p) => p.cliente.id === clienteId) ?? data[0]!;
+  }, [data, clienteId]);
+
+  const destino = useMemo(
+    () => (passaporte ? construirProximoDestino(passaporte) : null),
+    [passaporte],
+  );
+
   return (
-    <Screen back backTo="/passaporte">
+    <Screen back backTo="/intelligence">
       <div className="flex items-center justify-center gap-3">
-        <span className="text-gold">≈</span>
-        <h2 className="font-display text-lg tracking-[0.18em] text-ink">PRÓXIMO CAPÍTULO</h2>
-        <span className="text-gold">≈</span>
+        <span className="text-gold">◈</span>
+        <h2 className="font-display text-xl tracking-[0.08em] text-primary">
+          NEXT DESTINATION
+        </h2>
+        <span className="text-gold">◈</span>
       </div>
+      <p className="mt-2 text-center text-xs leading-snug text-muted-foreground">
+        O sistema lê o histórico e apresenta uma direção possível. O procedimento final é
+        decidido pela profissional.
+      </p>
+      <Ornament className="mt-3" />
 
-      <div className="mt-4 parchment-card px-5 py-7">
-        <div className="flex justify-center">
-          <div className="grid h-20 w-20 place-items-center rounded-full border-2 border-primary/50 text-center font-display text-[8px] leading-tight tracking-[0.12em] text-primary/70">
-            NUTRIÇÃO
-            <Droplet className="my-0.5 h-5 w-5 text-primary" />
-            INTENSIVA
-          </div>
-        </div>
-        <Ornament className="my-4" />
+      {isLoading && <p className="mt-6 text-center text-sm text-muted-foreground">Carregando…</p>}
 
-        <h3 className="text-center font-display text-4xl leading-tight text-ink">
-          NUTRIÇÃO
-          <br />
-          INTENSIVA
-        </h3>
-
-        <div className="mt-5 rotate-[-2deg] rounded-lg border-2 border-primary/60 px-4 py-3 text-center">
-          <p className="font-display text-2xl leading-tight tracking-[0.06em] text-primary">
-            DESTINO
-            <br />
-            APROVADO
-          </p>
-        </div>
-
-        <p className="mt-5 text-center font-display text-lg leading-snug text-gold">
-          Seu próximo cuidado
-          <br />já está liberado
+      {!isLoading && (!data || data.length === 0) && (
+        <p className="mt-6 text-center text-sm italic text-muted-foreground">
+          Informação insuficiente para uma leitura segura.
         </p>
+      )}
 
-        <Ornament className="my-4" />
+      {passaporte && destino && (
+        <div className="mt-4 space-y-4">
+          <ClienteSelect
+            valor={passaporte.cliente.id}
+            onChange={setClienteId}
+            opcoes={(data ?? []).map((p) => ({ id: p.cliente.id, nome: p.cliente.name }))}
+          />
 
-        <p className="flex items-center justify-center gap-2 font-display text-2xl text-ink">
-          <Calendar className="h-6 w-6 text-gold" /> 21 SET
-        </p>
+          {!destino.temLeitura && (
+            <p className="mt-4 text-center text-sm italic text-muted-foreground">
+              Informação insuficiente para identificar um próximo destino. Registre ao menos um
+              capítulo anterior para que o sistema possa fazer uma leitura.
+            </p>
+          )}
 
-        <ul className="mt-5 space-y-3">
-          {beneficios.map(({ icon: Icon, texto }) => (
-            <li
-              key={texto}
-              className="flex items-center gap-3 border-b border-dotted border-gold/50 pb-2"
-            >
-              <span className="grid h-9 w-9 place-items-center rounded-full border border-gold/70 text-gold">
-                <Icon className="h-4 w-4" />
-              </span>
-              <span className="font-display text-lg text-ink">{texto}</span>
-            </li>
+          {destino.secoes.map((s) => (
+            <SectionCard
+              key={s.key}
+              titulo={s.titulo}
+              descricao={s.descricao}
+              itens={s.itens}
+              vazio={s.vazio}
+            />
           ))}
-        </ul>
 
-        <div className="mt-6 flex justify-end">
-          <Stamp>ROTA ✈ LIBERADA</Stamp>
+          <Link
+            to="/intelligence"
+            className="flex w-full items-center justify-center rounded-full border border-gold/70 bg-card px-6 py-3.5 font-display text-sm tracking-[0.14em] text-primary"
+          >
+            VER INTELLIGENCE BRIEF
+          </Link>
         </div>
-
-        <div className="mt-4">
-          <WineButton onClick={() => toast.success("Destino confirmado para 21 SET")}>
-            CONFIRMAR DESTINO
-          </WineButton>
-        </div>
-      </div>
+      )}
     </Screen>
   );
 }
