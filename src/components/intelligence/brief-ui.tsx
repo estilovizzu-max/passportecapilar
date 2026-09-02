@@ -208,28 +208,58 @@ export function InsightCard({
   const badgeClass = confiancaColor[item.confianca ?? "media"];
   const badgeLabel = item.confianca ? confiancaLabel[item.confianca] : "MEDIUM";
 
+  // BASIS: datas das evidências disponíveis
+  const basisLines = item.evidencias
+    .slice(0, 3)
+    .map((e) => (e.ocorridoEm ? new Date(e.ocorridoEm).toLocaleString("pt-BR") : e.descricao))
+    .filter(Boolean);
+
   return (
     <li className="rounded-xl border-2 border-gold/60 bg-gold/5 px-4 py-3.5 transition-all duration-300 hover:border-gold hover:shadow-[0_8px_30px_-8px_oklch(0.84_0.11_88_/_0.5)] animate-in fade-in slide-in-from-bottom-2">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="text-gold">◈</span>
-            <span className="rounded-full border border-gold/60 bg-gold/10 px-2.5 py-1 font-display text-[11px] tracking-[0.2em] text-gold">
-              INSIGHT
-            </span>
-            <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] tracking-[0.14em] ${badgeClass}`}>
-              {badgeLabel}
-            </span>
-          </div>
-          <p className="text-sm font-medium leading-snug text-ink">{item.valor}</p>
-          {item.evidencias.length > 0 && (
-            <p className="mt-1.5 text-[11px] text-muted-foreground">
-              {item.evidencias.length} registro{item.evidencias.length !== 1 ? "s" : ""} encontrado{item.evidencias.length !== 1 ? "s" : ""}
-            </p>
-          )}
-        </div>
+      {/* Header */}
+      <div className="mb-2 flex items-center gap-2">
+        <span className="text-gold">◈</span>
+        <span className="rounded-full border border-gold/60 bg-gold/10 px-2.5 py-1 font-display text-[11px] tracking-[0.2em] text-gold">
+          INSIGHT
+        </span>
+        <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] tracking-[0.14em] ${badgeClass}`}>
+          {badgeLabel}
+        </span>
       </div>
 
+      {/* Texto principal */}
+      <p className="text-sm font-medium leading-snug text-ink">
+        "{item.valor}"
+      </p>
+
+      {/* BASIS */}
+      {basisLines.length > 0 && (
+        <div className="mt-3">
+          <p className="text-[9px] tracking-[0.18em] text-muted-foreground mb-1">BASIS</p>
+          <div className="rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 space-y-0.5">
+            {basisLines.map((line, i) => (
+              <p key={i} className="text-[11px] text-muted-foreground">
+                {line}
+              </p>
+            ))}
+            {item.evidencias.length > 3 && (
+              <p className="text-[10px] italic text-muted-foreground">
+                +{item.evidencias.length - 3} registro{item.evidencias.length - 3 !== 1 ? "s" : ""} adicional{item.evidencias.length - 3 !== 1 ? "is" : ""}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* VALIDATE */}
+      <div className="mt-2">
+        <p className="text-[9px] tracking-[0.18em] text-gold">VALIDATE</p>
+        <p className="text-[11px] italic text-muted-foreground mt-0.5">
+          Confirmar objetivo atual com a cliente.
+        </p>
+      </div>
+
+      {/* ACTION */}
       {acoes && (
         <div className="mt-3 flex items-center gap-2 border-t border-gold/30 pt-3">
           <button
