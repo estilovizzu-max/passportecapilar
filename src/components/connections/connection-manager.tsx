@@ -13,7 +13,7 @@ interface Connection {
   responded_at: string | null;
   removed_at: string | null;
   note: string | null;
-  client?: { name: string; email: string };
+  client?: { name: string; phone: string | null };
 }
 
 interface ConnectionManagerProps {
@@ -56,7 +56,7 @@ export function ConnectionManager({ clientId, compact = false }: ConnectionManag
     setLoading(true);
     const { data, error } = await supabase
       .from("professional_connections")
-      .select(`*, client:clients(name, email)`)
+      .select(`*, client:clients(name, phone)`)
       .eq("professional_id", user.id)
       .order("requested_at", { ascending: false });
     setLoading(false);
