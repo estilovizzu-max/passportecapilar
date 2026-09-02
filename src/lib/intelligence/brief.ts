@@ -2,6 +2,7 @@ import { formatDataLonga, type Passaporte } from "@/lib/passport-api";
 import { construirIntelligence } from "./build";
 import type { IntelligenceItem, IntelligenceRecord } from "./types";
 import { declaracoesComoItens, type DeclaracaoRow } from "./declarations-api";
+import { capitulos, getCapitulo, ordemCapitulos, type Capitulo } from "./capitals";
 
 export const SEM_INFO = "Informação insuficiente para uma leitura segura.";
 
@@ -78,10 +79,46 @@ export function construirBrief(
     ["Tipo de cabelo", "Protocolo atual", "Ciclo registrado"].includes(i.rotulo),
   );
 
-  const desejoItems = [
+  // Constrói itens da seção DESIRE a partir de:
+  // 1) preferências registradas da cliente
+  // 2) declarações explícitas feitas pela profissional via DeclaracoesCard
+  // 3) conteúdo descritivo dos capítulos do protocolo (diagnóstico, tratamento, selagem, brilho)
+  const desejoItems: IntelligenceItem[] = [
     ...r.preferencias,
     ...(declarations ? declaracoesComoItens(declarations) : []),
   ];
+
+  // Itens derivados do conteúdo dos capítulos — natureza INTERPRETAÇÃO, pois
+  // representam o que a cliente pode desejar mas ainda não foi registrado como escolha.
+  for (const chave of ordemCapitulos) {
+    const cap = getCapitulo(chave as Capitulo);
+    if (!cap) continue;
+    // Só inclui se ainda não existe uma declaração equivalente (evita duplicar se já houver objetivo registrado).
+    const jaDeclarado = desejoItems.some(
+      (item) =>
+        item.valor.toLowerCase().includes(chave) ||
+        item.rotulo.toLowerCase().includes(chave),
+    );
+    if (!jaDeclarado) {
+      desejoItems.push({
+        id: `capitulo-${chave}`,
+        layer: "preference-memory",
+        natureza: "interpretation",
+        origem: "inference",
+        rotulo: `Capítulo do protocolo`,
+        valor: `${cap.titulo}: ${cap.descricaoCurta}`,
+        confianca: "media",
+        ocorridoEm: null,
+        evidencias: [
+          {
+            tipo: "derivado" as const,
+            id: chave,
+            descricao: `Conteúdo registrado em src/lib/intelligence/capitals.ts — ${cap.titulo}`,
+          },
+        ],
+      });
+    }
+  }
 
   return {
     record: r,
