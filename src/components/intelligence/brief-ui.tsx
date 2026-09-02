@@ -3,15 +3,16 @@ import { Check, Pencil, X } from "lucide-react";
 import type { IntelligenceItem } from "@/lib/intelligence/types";
 import type { DataVersion } from "@/lib/intelligence/data-version";
 
-
 export type ItemEstado = "pendente" | "confirmado" | "descartado";
 
 export function NaturezaTag({ item }: { item: IntelligenceItem }) {
   const fato = item.natureza === "fact";
   return (
     <span
-      className={`inline-block rounded-full border px-2 py-0.5 text-[9px] tracking-[0.16em] ${
-        fato ? "border-primary/50 text-primary" : "border-gold text-gold"
+      className={`inline-block rounded-full border px-2 py-0.5 text-[9px] tracking-[0.16em] transition-all duration-200 ${
+        fato
+          ? "border-primary/50 text-primary hover:border-primary/80 hover:bg-primary/5"
+          : "border-gold text-gold hover:border-gold/80 hover:bg-gold/5"
       }`}
     >
       {fato ? "REGISTRADO" : `INTERPRETAÇÃO${item.confianca ? ` · ${item.confianca}` : ""}`}
@@ -45,7 +46,7 @@ export function ItemLinha({
   if (estado === "descartado") return null;
 
   return (
-    <li className="border-t border-gold/20 py-2.5 first:border-t-0">
+    <li className="transition-all duration-200 hover:bg-gold/5 -mx-2 rounded-lg px-2 border-t border-gold/20 py-2.5 first:border-t-0">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-display text-[11px] tracking-[0.14em] text-muted-foreground">
@@ -70,10 +71,10 @@ export function ItemLinha({
               onAcao?.(item, "confirmar", { sectionKey });
             }}
             aria-label="Confirmar"
-            className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] tracking-[0.14em] ${
+            className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] tracking-[0.14em] transition-all duration-200 ${
               estado === "confirmado"
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-primary/40 text-primary"
+                ? "border-primary bg-primary text-primary-foreground scale-95"
+                : "border-primary/40 text-primary hover:border-primary/80 hover:bg-primary/10 hover:scale-[1.02]"
             }`}
           >
             <Check className="h-3 w-3" /> CONFIRMAR
@@ -82,7 +83,7 @@ export function ItemLinha({
             type="button"
             onClick={() => setEditando((v) => !v)}
             aria-label="Editar"
-            className="flex items-center gap-1 rounded-full border border-gold/60 px-2.5 py-1 text-[10px] tracking-[0.14em] text-gold"
+            className="flex items-center gap-1 rounded-full border border-gold/60 px-2.5 py-1 text-[10px] tracking-[0.14em] text-gold transition-all duration-200 hover:border-gold hover:bg-gold/10 hover:scale-[1.02]"
           >
             <Pencil className="h-3 w-3" /> EDITAR
           </button>
@@ -93,7 +94,7 @@ export function ItemLinha({
               onAcao?.(item, "descartar", { sectionKey });
             }}
             aria-label="Descartar"
-            className="flex items-center gap-1 rounded-full border border-muted-foreground/40 px-2.5 py-1 text-[10px] tracking-[0.14em] text-muted-foreground"
+            className="flex items-center gap-1 rounded-full border border-muted-foreground/40 px-2.5 py-1 text-[10px] tracking-[0.14em] text-muted-foreground transition-all duration-200 hover:border-destructive/60 hover:text-destructive hover:bg-destructive/5 hover:scale-[1.02]"
           >
             <X className="h-3 w-3" /> DESCARTAR
           </button>
@@ -120,7 +121,7 @@ export function ItemLinha({
                 onAcao?.(item, "editar", { sectionKey, nota: nota.trim() });
                 setEditando(false);
               }}
-              className="shrink-0 rounded-full border border-gold/60 px-2.5 py-1 text-[10px] tracking-[0.14em] text-gold disabled:opacity-40"
+              className="shrink-0 rounded-full border border-gold/70 px-2.5 py-1 text-[10px] tracking-[0.14em] text-gold transition-all duration-200 hover:border-gold hover:bg-gold/10 disabled:opacity-40"
             >
               SALVAR NA TRILHA
             </button>
@@ -149,7 +150,7 @@ export function SectionCard({
   onAcao?: ItemAcaoHandler;
 }) {
   return (
-    <section className="parchment-card p-4">
+    <section className="parchment-card p-4 transition-all duration-300 hover:shadow-[0_12px_36px_-14px_oklch(0.3_0.05_40_/_0.55)] hover:border-gold/50 animate-in fade-in slide-in-from-bottom-2">
       <h3 className="font-display text-sm tracking-[0.22em] text-primary">{titulo}</h3>
       <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{descricao}</p>
       {itens.length === 0 ? (
@@ -174,7 +175,7 @@ export function SectionCard({
 /** Cartão que mostra a data_version usada na leitura e o que a compõe. */
 export function DataVersionCard({ versao }: { versao: DataVersion }) {
   return (
-    <section className="parchment-card p-4">
+    <section className="parchment-card p-4 transition-all duration-300 hover:shadow-[0_12px_36px_-14px_oklch(0.3_0.05_40_/_0.55)] hover:border-gold/50 animate-in fade-in slide-in-from-bottom-2">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display text-sm tracking-[0.22em] text-primary">VERSÃO DOS DADOS</h3>
         <span className="rounded-full border border-gold/60 px-2 py-0.5 font-mono text-[10px] text-gold">
@@ -206,7 +207,6 @@ export function DataVersionCard({ versao }: { versao: DataVersion }) {
     </section>
   );
 }
-
 
 export function ClienteSelect({
   valor,
@@ -254,7 +254,7 @@ export function DeclaracoesCard({
   const [content, setContent] = useState("");
 
   return (
-    <section className="parchment-card p-4">
+    <section className="parchment-card p-4 transition-all duration-300 hover:shadow-[0_12px_36px_-14px_oklch(0.3_0.05_40_/_0.55)] hover:border-gold/50 animate-in fade-in slide-in-from-bottom-2">
       <h3 className="font-display text-sm tracking-[0.22em] text-primary">
         DECLARADO PELA PROFISSIONAL
       </h3>
@@ -280,7 +280,7 @@ export function DeclaracoesCard({
                 type="button"
                 onClick={() => onArquivar(d.id)}
                 aria-label="Arquivar declaração"
-                className="shrink-0 rounded-full border border-muted-foreground/40 px-2.5 py-1 text-[10px] tracking-[0.14em] text-muted-foreground"
+                className="shrink-0 rounded-full border border-muted-foreground/40 px-2.5 py-1 text-[10px] tracking-[0.14em] text-muted-foreground transition-all duration-200 hover:border-destructive/60 hover:text-destructive hover:bg-destructive/5 hover:scale-[1.02]"
               >
                 ARQUIVAR
               </button>
@@ -296,8 +296,8 @@ export function DeclaracoesCard({
               key={k}
               type="button"
               onClick={() => setKind(k)}
-              className={`rounded-full border px-3 py-1 text-[10px] tracking-[0.14em] ${
-                kind === k ? "border-gold bg-gold/15 text-gold" : "border-gold/40 text-muted-foreground"
+              className={`rounded-full border px-3 py-1 text-[10px] tracking-[0.14em] transition-all duration-200 ${
+                kind === k ? "border-gold bg-gold/15 text-gold" : "border-gold/40 text-muted-foreground hover:border-gold/60 hover:text-gold"
               }`}
             >
               {k === "preference" ? "PREFERÊNCIA" : "OBJETIVO"}
@@ -308,14 +308,14 @@ export function DeclaracoesCard({
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Título curto (ex.: Evitar química)"
-          className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink"
+          className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink transition-all duration-200 focus:border-gold/70 focus:ring-1 focus:ring-gold/30"
         />
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={2}
           placeholder="Informação declarada explicitamente"
-          className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink"
+          className="w-full rounded-lg border border-gold/40 bg-card p-2 text-sm text-ink transition-all duration-200 focus:border-gold/70 focus:ring-1 focus:ring-gold/30"
         />
         <button
           type="button"
@@ -325,9 +325,9 @@ export function DeclaracoesCard({
             setLabel("");
             setContent("");
           }}
-          className="w-full rounded-full border border-gold/70 bg-card px-6 py-3 font-display text-xs tracking-[0.14em] text-primary disabled:opacity-40"
+          className="w-full rounded-full wine-surface px-6 py-3.5 font-display text-xs tracking-[0.14em] text-primary-foreground ring-1 ring-gold/50 transition-all duration-200 hover:brightness-110 active:scale-[0.98] disabled:opacity-40"
         >
-          DECLARAR INFORMAÇÃO
+          {salvando ? "SALVANDO..." : "DECLARAR INFORMAÇÃO"}
         </button>
       </div>
     </section>
