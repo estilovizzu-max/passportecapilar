@@ -287,3 +287,186 @@ export function construirPreparacao(p: Passaporte, base?: IntelligenceRecord): P
     ],
   };
 }
+
+// ─── NEXT DESTINATION ──────────────────────────────────────────────────────────
+
+export type DestinoSectionKey =
+  | "possible-destination"
+  | "why"
+  | "what-to-validate"
+  | "professional-decision";
+
+export const destinoSectionLabel: Record<DestinoSectionKey, string> = {
+  "possible-destination": "POSSIBLE DESTINATION",
+  why: "WHY",
+  "what-to-validate": "WHAT TO VALIDATE",
+  "professional-decision": "PROFESSIONAL DECISION",
+};
+
+export const destinoSectionDescription: Record<DestinoSectionKey, string> = {
+  "possible-destination": "Uma direção possível para a jornada, baseada no histórico registrado.",
+  why: "Os registros disponíveis indicando esta direção.",
+  "what-to-validate": "Informação a confirmar com a cliente antes de qualquer decisão.",
+  "professional-decision": "A decisão sobre o próximo capítulo permanece com a profissional.",
+};
+
+export type DestinoSection = {
+  key: DestinoSectionKey;
+  titulo: string;
+  descricao: string;
+  itens: IntelligenceItem[];
+  vazio: string;
+};
+
+export type ProximoDestino = {
+  clienteNome: string;
+  geradoEm: string;
+  secoes: DestinoSection[];
+  temLeitura: boolean;
+};
+
+function item(
+  id: string,
+  rotulo: string,
+  valor: string,
+  natureza: "fact" | "interpretation" = "interpretation",
+  confianca?: "alta" | "media" | "baixa",
+): IntelligenceItem {
+  return {
+    id,
+    layer: "guidance",
+    natureza,
+    origem: natureza === "fact" ? "record" : "inference",
+    rotulo,
+    valor,
+    ...(natureza === "interpretation" && confianca
+      ? { confianca }
+      : { confianca: "media" as const }),
+    ocorridoEm: null,
+    evidencias: [],
+  };
+}
+
+/** Monta "Próximo Destino" — leitura contextual da jornada registrada. */
+export function construirProximoDestino(p: Passaporte, base?: IntelligenceRecord): ProximoDestino {
+  const r = base ?? construirIntelligence(p);
+
+  const proximoRegistrado = p.ultimo?.next_procedure ?? null;
+  const ultimoCapitulo = p.ultimo?.procedure ?? null;
+  const dataUltimo = p.ultimo ? formatDataLonga(p.ultimo.service_date) : null;
+
+  // POSSIBLE DESTINATION
+  const destinoItems: IntelligenceItem[] = [];
+  if (proximoRegistrado) {
+    destinoItems.push(
+      item(
+        "dest-proximo-registrado",
+        "Próximo capítulo registrado",
+        proximoRegistrado,
+        "fact",
+      ),
+    );
+  } else if (ultimoCapitulo) {
+    destinoItems.push(
+      item(
+        "dest-derived",
+        "Pode ser interessante considerar",
+        `Continuidade após ${ultimoCapitulo}`,
+        "interpretation",
+        "media",
+      ),
+    );
+  }
+
+  const temLeitura = destinoItems.length > 0;
+
+  // WHY — evidências do histórico
+  const whyItems: IntelligenceItem[] = [];
+  if (dataUltimo) {
+    whyItems.push(
+      item("why-ultimo", "Último registro", `${ultimoCapitulo} em ${dataUltimo}`, "fact"),
+    );
+  }
+  if (r.padroes.length > 0) {
+    whyItems.push(
+      item(
+        "why-padrao",
+        "Padrão identificado",
+        r.padroes[0]!.valor,
+        "interpretation",
+        "media",
+      ),
+    );
+  } else if (ultimoCapitulo) {
+    whyItems.push(
+      item(
+        "why-inference",
+        "Os registros disponíveis indicam",
+        `Sequência lógica após ${ultimoCapitulo}`,
+        "interpretation",
+        "baixa",
+      ),
+    );
+  }
+
+  // WHAT TO VALIDATE
+  const validateItems: IntelligenceItem[] = [];
+  if (r.lacunas.length > 0) {
+    r.lacunas.forEach((l, idx) => {
+      validateItems.push(item(`validate-${idx}`, "Vale validar com a cliente", l, "interpretation", "alta"));
+    });
+  } else {
+    validateItems.push(
+      item(
+        "validate-generic",
+        "Vale validar com a cliente",
+        "Confirmar se o objetivo atual continua o mesmo desde o último registro.",
+        "interpretation",
+        "media",
+      ),
+    );
+  }
+
+  return {
+    clienteNome: r.clienteNome,
+    geradoEm: r.geradoEm,
+    temLeitura,
+    secoes: [
+      {
+        key: "possible-destination",
+        titulo: destinoSectionLabel["possible-destination"],
+        descricao: destinoSectionDescription["possible-destination"],
+        itens: destinoItems,
+        vazio: SEM_INFO,
+      },
+      {
+        key: "why",
+        titulo: destinoSectionLabel.why,
+        descricao: destinoSectionDescription.why,
+        itens: whyItems,
+        vazio: "Sem evidências registradas suficientes para identificar uma direção.",
+      },
+      {
+        key: "what-to-validate",
+        titulo: destinoSectionLabel["what-to-validate"],
+        descricao: destinoSectionDescription["what-to-validate"],
+        itens: validateItems,
+        vazio: "Nada pendente de validação com base no registro atual.",
+      },
+      {
+        key: "professional-decision",
+        titulo: destinoSectionLabel["professional-decision"],
+        descricao: destinoSectionDescription["professional-decision"],
+        itens: [
+          item(
+            "decision-bridge",
+            " bridge",
+            "O procedimento final é decidido pela profissional com base na leitura do histórico e na validação com a cliente.",
+            "fact",
+          ),
+        ],
+        vazio: SEM_INFO,
+      },
+    ],
+  };
+}
