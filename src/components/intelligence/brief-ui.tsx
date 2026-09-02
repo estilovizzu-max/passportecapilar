@@ -1,7 +1,39 @@
 import { useState } from "react";
 import { Check, ChevronDown, ChevronUp, Pencil, X } from "lucide-react";
-import type { IntelligenceItem } from "@/lib/intelligence/types";
+import type { Confianca, IntelligenceItem } from "@/lib/intelligence/types";
 import type { DataVersion } from "@/lib/intelligence/data-version";
+
+// ─── Confidence Layer ─────────────────────────────────────────────────────────
+
+export const confiancaLabel: Record<Confianca, string> = { alta: "HIGH", media: "MEDIUM", baixa: "LOW" };
+export const confiancaColor: Record<Confianca, string> = {
+  alta: "border-primary/60 text-primary",
+  media: "border-gold/60 text-gold",
+  baixa: "border-muted-foreground/40 text-muted-foreground",
+};
+export const confiancaHelperText: Record<Confianca, string> = {
+  alta: "Leitura baseada diretamente nos registros disponíveis.",
+  media: "Vale confirmar esta leitura com a cliente.",
+  baixa: "Não há informações suficientes para concluir isso.",
+};
+
+export function getConfianca(item: IntelligenceItem): Confianca {
+  return item.confianca ?? "media";
+}
+
+export function ConfiancaTag({ item }: { item: IntelligenceItem }) {
+  const c = getConfianca(item);
+  return (
+    <div className="flex flex-col items-end gap-0.5">
+      <span className={`rounded-full border px-2.5 py-1 font-mono text-[9px] tracking-[0.14em] ${confiancaColor[c]}`}>
+        {confiancaLabel[c]}
+      </span>
+      <span className="max-w-[180px] text-right text-[9px] italic text-muted-foreground">
+        {confiancaHelperText[c]}
+      </span>
+    </div>
+  );
+}
 
 // ─── Evidence Layer ────────────────────────────────────────────────────────────
 
