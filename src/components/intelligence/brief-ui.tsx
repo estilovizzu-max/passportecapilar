@@ -88,7 +88,7 @@ interface EvidenceEntry {
 function parseEvidencia(item: IntelligenceItem): EvidenceEntry[] {
   return item.evidencias.map((e) => ({
     tipo: e.tipo === "cliente" ? "Cadastro" : e.tipo === "atendimento" ? "Atendimento" : e.tipo === "reativacao" ? "Reativação" : "Registro",
-    data: item.ocorridoEm ? new Date(item.ocorridoEm).toLocaleDateString("pt-BR") : undefined,
+    data: item.ocorridoEm ? new Date(item.ocorridoEm).toLocaleDateString("pt-BR") : null,
     capitulo: e.descricao.split(" — ")[0] ?? e.descricao,
     informacao: e.descricao,
   }));
@@ -333,7 +333,7 @@ export function SectionCard({
                 item={i}
                 acoes={acoes}
                 sectionKey={sectionKey}
-                onAcao={onAcao}
+                {...(onAcao ? { onAcao } : {})}
               />
             ) : (
               <ItemLinha
@@ -341,7 +341,7 @@ export function SectionCard({
                 item={i}
                 acoes={acoes}
                 sectionKey={sectionKey}
-                onAcao={onAcao}
+                {...(onAcao ? { onAcao } : {})}
               />
             )
           )}
@@ -391,7 +391,7 @@ export function InsightCard({
   // BASIS: datas das evidências disponíveis
   const basisLines = item.evidencias
     .slice(0, 3)
-    .map((e) => (e.ocorridoEm ? new Date(e.ocorridoEm).toLocaleString("pt-BR") : e.descricao))
+    .map((e) => (item.ocorridoEm ? `${new Date(item.ocorridoEm).toLocaleDateString("pt-BR")} — ${e.descricao}` : e.descricao))
     .filter(Boolean);
 
   return (
