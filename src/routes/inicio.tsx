@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, ChevronRight, UserRound } from "lucide-react";
+import { NotificationBell } from "@/components/notifications";
 import { Ornament, Screen, SectionTitle } from "@/components/passport/ui";
 import { useRequireAuth } from "@/hooks/useAuth";
 import { clientes } from "@/lib/passport-data";
@@ -41,14 +42,17 @@ function Inicio() {
             ✦
           </span>
         </div>
-        <div className="flex-1">
-          <h2 className="font-display text-3xl leading-tight">
-            <span className="block text-primary">BOM DIA,</span>
-            <span className="block text-ink">THAYNARA</span>
-          </h2>
-          <Ornament className="my-2" />
-          <p className="text-sm tracking-[0.18em] text-gold">25 AGO 2026</p>
+        <div className="flex flex-1 items-center justify-between">
+          <div>
+            <h2 className="font-display text-3xl leading-tight">
+              <span className="block text-primary">BOM DIA,</span>
+              <span className="block text-ink">THAYNARA</span>
+            </h2>
+            <Ornament className="my-2" />
+            <p className="text-sm tracking-[0.18em] text-gold">25 AGO 2026</p>
+          </div>
         </div>
+        <NotificationBell />
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4">
